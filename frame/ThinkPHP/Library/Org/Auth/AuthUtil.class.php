@@ -80,7 +80,7 @@ class AuthUtil {
 				}
 			}
 		}
-		 
+
 		//如果当前访问链接不在功能列表中，判断是否在不需设置权限的功能列表中
 		if(!$in_function_list) {
 			if(is_array(self::$noAuthFuncList) && count(self::$noAuthFuncList) > 0) {
@@ -95,7 +95,7 @@ class AuthUtil {
 				}
 			}
 		}
-		 
+
 		if(!$in_function_list && AUTH_CHECK) {
             if(!is_null($callback) && is_callable($callback)) {
                 call_user_func($callback, [

@@ -22,8 +22,6 @@ return [
     'IS_ENCRYPTION' => 0, //是否加密 1加密 0不加密
     'APP_NAME' => '系统Demo', //应用名称
 
-	'URI_PREFIX' => '/index.php',//uri前缀（url中隐藏的部分）
-
 	'CSS_VERSION'=>'20160720',//CSS版本号
 	'JS_VERSION'=>'20160720',//JS版本号
 	'IMG_VERSION'=>'20160720',//图片版本号

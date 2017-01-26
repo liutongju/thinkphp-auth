@@ -21,10 +21,10 @@ define('APP_DEBUG',True);
 define('COMMON_PATH','./Application/Common/');
 
 // 定义运行时目录
-define('RUNTIME_PATH','/cache/Runtime/op/');
+define('RUNTIME_PATH','/cache/Runtime/demo/');
 
 //日志路径
-define('LOG_PATH', '/log/web/op/');
+define('LOG_PATH', '/log/web/demo/');
 
 // 定义应用目录
 define('APP_PATH','./Application/');

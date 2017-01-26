@@ -64,7 +64,7 @@ class LoginController extends Controller {
 			$_SESSION['_curr_appid_'] = $app_id;//当前应用appid
 			$_SESSION['_appid_'] = $app_id;//待设置权限应用的appid
 
-			return Response(999, '登录成功', ['callback'=>'/admin']);
+			return Response(999, '登录成功', ['callback'=>'/']);
 		} else {
 			return Response($result['Code'], $result['Msg']);
 		}
@@ -84,7 +84,7 @@ class LoginController extends Controller {
 	public function logout() {
 		session_unset();
 		session_destroy();
-		header('Location:/admin/login');
+		header('Location:/login');
 		exit();
 	}
 }
