@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>聚群 | 权限系统</title>
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+		<!-- Bootstrap 3.3.6 -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/bootstrap/css/bootstrap.min')}">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/font-awesome-4.6.3/css/font-awesome.min')}">
+		<!-- Ionicons -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/ionicons-2.0.1/css/ionicons.min')}">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/dist/css/AdminLTE.min')}">
+		<!-- AdminLTE Skins -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/dist/css/skins/skin-blue.min')}">
+		<!-- Pace style -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/pace/pace.min')}">
+		<!-- artDialog style -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/artDialog/css/ui-dialog')}">
+		<!-- iCheck Skins -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/icheck-1.x/skins/all')}">
+		<!-- datepicker -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/datepicker/datepicker3')}">
+		<!-- select2 -->
+		<link rel="stylesheet" href="{:load_css('AdminLTE/plugins/select2/select2.min')}">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		
+		<!-- jQuery 2.2.3 -->
+		<script src="{:load_js('AdminLTE/plugins/jQuery/jquery-2.2.3.min')}"></script>
+		<!-- Bootstrap 3.3.6 -->
+		<script src="{:load_js('AdminLTE/bootstrap/js/bootstrap.min')}"></script>
+		<!-- AdminLTE App -->
+		<script src="{:load_js('AdminLTE/dist/js/app.min')}"></script>
+		<!-- PACE -->
+		<script src="{:load_js('AdminLTE/plugins/pace/pace.min')}"></script>
+		<!-- SlimScroll -->
+		<script src="{:load_js('AdminLTE/plugins/slimScroll/jquery.slimscroll.min')}"></script>
+		<!-- FastClick -->
+		<script src="{:load_js('AdminLTE/plugins/fastclick/fastclick')}"></script>
+		<!-- artDialog -->
+		<script src="{:load_js('AdminLTE/plugins/artDialog/dist/dialog-min')}"></script>
+		<!-- artDialog helper -->
+		<script src="{:load_js('AdminLTE/plugins/artDialog/dist/dialog-hlp')}"></script>
+		<!-- iCheck -->
+		<script src="{:load_js('AdminLTE/plugins/icheck-1.x/icheck.min')}"></script>
+		<!-- datepicker -->
+		<script src="{:load_js('AdminLTE/plugins/datepicker/bootstrap-datepicker')}"></script>
+		<script src="{:load_js('AdminLTE/plugins/datepicker/locales/bootstrap-datepicker.zh-CN')}"></script>
+		<!-- select2 -->
+		<script src="{:load_js('AdminLTE/plugins/select2/select2.min')}"></script>
+
+		<!-- upload -->
+		<script src="{:load_js('global/ajaxfileupload')}"></script>
+
+		<script type="text/javascript">
+            document.domain = '<php>echo C("POSTFIX_DOMAIN");</php>';
+            window.domain = {
+                'static_domain': '<php>echo C("STATIC_DOMAIN");</php>',//静态资源域名
+            };
+
+            //初始化工具类状态
+            var initBody = function(){
+                var cls = localStorage.body_cls;
+                if(cls == 'sidebar-collapse' && !$('body').hasClass('sidebar-collapse')) {
+                    $('body').addClass(cls);
+                } else if(cls != 'sidebar-collapse' && $('body').hasClass('sidebar-collapse')) {
+                    $('body').removeClass(cls);
+                }
+            };
+		</script>
+	</head>
+	<body class="hold-transition skin-blue sidebar-mini">
+		<script type="text/javascript">initBody();</script>
+		<div class="wrapper">
+			<header class="main-header">
+				<a href="/admin" class="logo">
+					<span class="logo-mini"><b>聚群</b></span>
+					<span class="logo-lg"><b>聚群</b> | 权限系统</span>
+				</a>
+				<nav class="navbar navbar-static-top" role="navigation">
+					<a href="#" class="sidebar-toggle main-sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span></a>
+					<div class="navbar-custom-menu">
+						<ul class="nav navbar-nav">
+							<li class="dropdown user user-menu">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									<img src="{:load_img($_user_['img'])}" class="user-avatar user-image" alt="User Image">
+									<span class="hidden-xs">{$_user_.nickname}</span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="user-header">
+										<img src="{:load_img($_user_['img'])}" class="img-circle" alt="User Image">
+										<p>
+											{$_user_.nickname}
+											<small>{$_user_.department_name} - {$_user_.position_name}</small> 
+											<small>工号： {$_user_.work_number}</small>
+										</p>
+									</li>
+									<li class="user-body">
+										<div class="row">
+											<div class="col-xs-12 text-center">
+												<a href="javascript:;">越努力，越幸运</a>
+											</div>
+										</div>
+									</li>
+									<li class="user-footer">
+										<div class="pull-left">
+											<a href="/admin/index/profile" class="btn btn-default btn-flat">主页</a>
+										</div>
+										<div class="pull-right">
+											<a href="/admin/login/logout" class="btn btn-default btn-flat">退出</a>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<li><a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a></li>
+						</ul>
+					</div>
+				</nav>
+			</header>

@@ -1,0 +1,314 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>菜单列表</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">权限管理</li>
+			<li class="active">菜单列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 40px">ID</th>
+							<th>一级目录</th>
+							<th>二级目录</th>
+							<th>功能</th>
+							<th>URL</th>
+							<th style="width: 160px">操作</th>
+						</tr>
+						<tr>
+                            <td>0</td>
+                            <td>顶级目录</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><button class="btn bg-maroon btn-xs add-btn" type="button" data-pid="0" data-preid="0" data-pname="顶级菜单">添加</button></td>
+                        </tr>
+						<foreach name="menuList" item="menu">
+                    		<tr>
+                    			<td>{$menu.info.id}</td>
+                    			<td>【{$menu.info.sort_id}】{$menu.info.name}</td>
+                    			<td></td>
+                    			<td><php>echo $functionList[$menu['info']['function_id']]['name']</php></td>
+                    			<td><a href="<php>echo $functionList[$menu['info']['function_id']]['path'].$menu['info']['url_extend'];</php>"><php>echo $functionList[$menu['info']['function_id']]['path'].$menu['info']['url_extend'];</php></a></td>
+                    			<td>
+									<ul class="list-inline">
+										<li><button class="btn bg-maroon btn-xs add-btn" type="button" data-pid="{$menu.info.id}" data-preid="{$menu.info.id}" data-pname="{$menu.info.name}">添加</button></li>
+										<li><button class="btn btn-primary btn-xs update-btn" type="button" data-id="{$menu.info.id}" data-pid="{$menu.info.pid}" data-pname="顶级菜单" data-name="{$menu.info.name}" data-url-extend="{$menu.info.url_extend}" data-function-id="{$menu.info.function_id}" data-sort-id="{$menu.info.sort_id}" data-icon="{$menu.info.icon}">修改</button></li>
+										<li><button class="btn btn-danger btn-xs delete-btn" type="button" data-id="{$menu.info.id}">删除</button></li>
+									</ul>
+                    			</td>
+                    		</tr>
+                    		<foreach name="menu.next" item="sub_menu">
+                    			<tr>
+	                    			<td>{$sub_menu.info.id}</td>
+	                    			<td></td>
+	                    			<td>【{$sub_menu.info.sort_id}】{$sub_menu.info.name}</td>
+	                    			<td><php>echo $functionList[$sub_menu['info']['function_id']]['name']</php></td>
+	                    			<td><a href="<php>echo $functionList[$sub_menu['info']['function_id']]['path'].$sub_menu['info']['url_extend'];</php>"><php>echo $functionList[$sub_menu['info']['function_id']]['path'].$sub_menu['info']['url_extend'];</php></a></td>
+	                    			<td>
+										<ul class="list-inline">
+											<li><button class="btn bg-maroon btn-xs add-btn" type="button" data-pid="{$sub_menu.info.pid}" data-preid="{$sub_menu.info.id}" data-pname="{$menu.info.name}">添加</button></li>
+											<li><button class="btn btn-primary btn-xs update-btn" type="button" data-id="{$sub_menu.info.id}" data-pid="{$sub_menu.info.pid}" data-pname="{$menu.info.name}" data-name="{$sub_menu.info.name}" data-url-extend="{$sub_menu.info.url_extend}" data-function-id="{$sub_menu.info.function_id}" data-sort-id="{$sub_menu.info.sort_id}" data-icon="{$sub_menu.info.icon}">修改</button></li>
+											<li><button class="btn btn-danger btn-xs delete-btn" type="button" data-id="{$sub_menu.info.id}">删除</button></li>
+										</ul>
+	                    			</td>
+	                    		</tr>
+                    		</foreach>
+                    	</foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+$(function(){
+	$(".add-btn").click(function(){
+	   var pid = $(this).attr('data-pid');
+	   var preid = $(this).attr('data-preid');
+	   var pname = $(this).attr('data-pname');
+
+	   var html = [];
+	   html.push('<form class="form-horizontal">');
+	   html.push('<div class="box-body">');
+
+	   html.push('<div class="form-group">');
+	   html.push('<label for="pname" class="col-sm-3 control-label">父菜单</label>');
+	   html.push('<div class="col-sm-9">');
+	   html.push('<input type="text" class="form-control" id="pname" value="' + pname + '" readonly>');
+	   html.push('</div>');
+	   html.push('</div>');
+
+	   html.push('<div class="form-group">');
+	   html.push('<label for="menu_name" class="col-sm-3 control-label">菜单名</label>');
+	   html.push('<div class="col-sm-9">');
+	   html.push('<input type="text" class="form-control" id="menu_name">');
+	   html.push('</div>');
+	   html.push('</div>');
+
+	   html.push('<div class="form-group">');
+	   html.push('<label for="func_id" class="col-sm-3 control-label">功能ID</label>');
+	   html.push('<div class="col-sm-9">');
+	   html.push('<input type="text" class="form-control" id="func_id" value="0">');
+	   html.push('</div>');
+	   html.push('</div>');
+
+	   html.push('<div class="form-group">');
+	   html.push('<label for="url_extend" class="col-sm-3 control-label">URL扩展</label>');
+	   html.push('<div class="col-sm-9">');
+	   html.push('<input type="text" class="form-control" id="url_extend">');
+	   html.push('</div>');
+	   html.push('</div>');
+
+	   if(pid == 0) {
+		   html.push('<div class="form-group">');
+		   html.push('<label for="icon" class="col-sm-3 control-label">图标</label>');
+		   html.push('<div class="col-sm-9">');
+		   html.push('<div class="input-group input-group-sm">');
+		   html.push('<input type="text" class="form-control" name="icon" id="icon" placeholder="如：fa fa-fw fa-home">');
+		   html.push('<span class="input-group-btn"><button type="button" class="btn btn-warning btn-flat" onclick="window.open(\'http://'+window.domain.static_domain+'/AdminLTE/pages/UI/icons.html\')">查看</button></span>');
+		   html.push('</div>');
+		   html.push('</div>');
+		   html.push('</div>');
+	   }
+
+	   html.push('</div>');
+
+	   html.push('<div class="box-footer">');
+	   html.push('<button type="button" class="btn btn-info pull-right add-commit-btn">提交</button>');
+	   html.push('</div>');
+
+	   html.push('</form>');
+
+	   var dialogObj = {
+		   title: "新增菜单",
+		   content: html.join(""),
+		   okValue: '关 闭',
+		   width:400,
+		   fixed:false,
+		   zIndex: 9999,
+		   onshow:function () {},
+		   onreset:function () {},
+		   onclose:function() {}
+	   };
+	   d = dialog(dialogObj);
+	   d.showModal();
+
+	   $(".add-commit-btn").click(function(){
+		   var menu_name = $.trim($("#menu_name").val());
+		   var func_id = $.trim($("#func_id").val());
+		   var url_extend = $.trim($("#url_extend").val());
+		   var icon = $.trim($("#icon").val());
+
+
+		   if(menu_name == '') {
+			   ArtDialogHlp.showInfo('提示', '请填写菜单名称');
+			   return false;
+		   }
+
+		   if(!!!Number.isInteger(func_id)) {
+			   ArtDialogHlp.showInfo('提示', '请填写正确的功能ID');
+			   return false;
+		   }
+
+		   var params = {};
+		   params.pid = pid;
+		   params.preid = preid;
+		   params.menu_name = menu_name;
+		   params.func_id = func_id;
+		   params.url_extend = url_extend;
+		   params.icon = icon;
+
+		   $.post("/admin/auth/addMenu", params, function(data) {
+			   if(data.Code == 999) {
+				   ArtDialogHlp.showInfo('提示', '操作成功', function(){
+					   window.location.href = '/admin/auth/menuList';
+				   });
+			   } else {
+				   ArtDialogHlp.showInfo('提示', data.Msg);
+			   }
+		   },'json');
+	   });
+	});
+
+	$(".update-btn").click(function(){
+        var id = $(this).attr('data-id');
+		var pid = $(this).attr('data-pid');
+        var name = $(this).attr('data-name');
+        var url_extend = $(this).attr('data-url-extend');
+        var function_id = $(this).attr('data-function-id');
+        var sort_id = $(this).attr('data-sort-id');
+        var icon = $(this).attr('data-icon');
+		var pname = $(this).attr('data-pname');
+
+		var html = [];
+		html.push('<form class="form-horizontal">');
+		html.push('<div class="box-body">');
+
+		html.push('<div class="form-group">');
+		html.push('<label for="pname" class="col-sm-3 control-label">父菜单</label>');
+		html.push('<div class="col-sm-9">');
+		html.push('<input type="text" class="form-control" id="pname" value="' + pname + '" readonly>');
+		html.push('</div>');
+		html.push('</div>');
+
+		html.push('<div class="form-group">');
+		html.push('<label for="menu_name" class="col-sm-3 control-label">菜单名</label>');
+		html.push('<div class="col-sm-9">');
+		html.push('<input type="text" class="form-control" id="menu_name" value="' + name + '">');
+		html.push('</div>');
+		html.push('</div>');
+
+		html.push('<div class="form-group">');
+		html.push('<label for="func_id" class="col-sm-3 control-label">功能ID</label>');
+		html.push('<div class="col-sm-9">');
+		html.push('<input type="text" class="form-control" id="func_id" value="' + function_id + '">');
+		html.push('</div>');
+		html.push('</div>');
+
+		html.push('<div class="form-group">');
+		html.push('<label for="url_extend" class="col-sm-3 control-label">URL扩展</label>');
+		html.push('<div class="col-sm-9">');
+		html.push('<input type="text" class="form-control" id="url_extend" value="' + url_extend + '">');
+		html.push('</div>');
+		html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="sort_id" class="col-sm-3 control-label">排序值</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="sort_id" value="' + sort_id + '" placeholder="值越小越靠前">');
+        html.push('</div>');
+        html.push('</div>');
+
+		if(pid == 0) {
+			html.push('<div class="form-group">');
+			html.push('<label for="icon" class="col-sm-3 control-label">图标</label>');
+			html.push('<div class="col-sm-9">');
+			html.push('<div class="input-group input-group-sm">');
+			html.push('<input type="text" class="form-control" name="icon" id="icon" value="' + icon + '" placeholder="如：fa fa-fw fa-home">');
+			html.push('<span class="input-group-btn"><button type="button" class="btn btn-warning btn-flat" onclick="window.open(\'http://'+window.domain.static_domain+'/AdminLTE/pages/UI/icons.html\')">查看</button></span>');
+			html.push('</div>');
+			html.push('</div>');
+			html.push('</div>');
+		}
+
+		html.push('</div>');
+
+		html.push('<div class="box-footer">');
+		html.push('<button type="button" class="btn btn-info pull-right update-commit-btn">提交</button>');
+		html.push('</div>');
+
+		html.push('</form>');
+
+		var dialogObj = {
+			title: "修改菜单",
+			content: html.join(""),
+			okValue: '关 闭',
+			width:400,
+			fixed:false,
+			zIndex: 9999,
+			onshow:function () {},
+			onreset:function () {},
+			onclose:function() {}
+		};
+		d = dialog(dialogObj);
+		d.showModal();
+
+		$(".update-commit-btn").click(function(){
+			var menu_name = $.trim($("#menu_name").val());
+			var func_id = $.trim($("#func_id").val());
+			var url_extend = $.trim($("#url_extend").val());
+            var sort_id = $.trim($("#sort_id").val());
+			var icon = $.trim($("#icon").val());
+
+			if(menu_name == '') {
+				ArtDialogHlp.showInfo('提示', '请填写菜单名称');
+				return false;
+			}
+
+			if(!!!Number.isInteger(func_id)) {
+				ArtDialogHlp.showInfo('提示', '请填写正确的功能ID');
+				return false;
+			}
+
+			var params = {};
+			params.id = id;
+			params.menu_name = menu_name;
+			params.func_id = func_id;
+			params.url_extend = url_extend;
+			params.sort_id = sort_id;
+			params.icon = icon;
+
+			$.post("/admin/auth/updateMenu", params, function(data) {
+				if(data.Code == 999) {
+					ArtDialogHlp.showInfo('提示', '操作成功', function(){
+						window.location.href = '/admin/auth/menuList';
+					});
+				} else {
+					ArtDialogHlp.showInfo('提示', data.Msg);
+				}
+			},'json');
+		});
+	});
+
+	$(".delete-btn").click(function(){
+	    var id = $(this).attr('data-id');
+        ArtDialogHlp.showConfirm('提示', '确定要删除该菜单吗？', function() {
+            $.post("/admin/auth/deleteMenu", {id : id}, function(data) {
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.href = '/admin/auth/menuList';
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            },'json');
+		})
+	});
+});
+</script>

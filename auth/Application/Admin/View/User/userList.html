@@ -1,0 +1,110 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>用户列表	</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">账号管理</li>
+			<li class="active">用户列表</li>
+			<if condition="$user_group_id gt 0">
+				<li class="active"><span class="label label-warning">{$userGroupInfo.name}</span></li>
+			</if>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<if condition="$user_group_id eq 0">
+				<div class="box-header with-border">
+					<form class="form-inline" action="/admin/user/userList" method="get">
+						<ul class="list-inline">
+							<li>用户名：<input type="text" placeholder="用户名" class="form-control input-sm" name="username" id="username" value="{$username}"></li>
+							<li>姓名：<input type="text" placeholder="姓名" class="form-control input-sm" name="name" id="name" value="{$name}"></li>
+							<li>部门：
+								<select class="form-control input-lg" name="department_id" id="department_id">
+									<option value="-1">选择部门</option>
+									<foreach name="departmentList" item="department">
+										<option value="{$department.id}" {$department['id']==$department_id?'selected':''}>{$department.name}</option>
+									</foreach>
+								</select>
+							</li>
+							<li><button type="submit" class="btn btn-info btn-sm" id="save-btn">查询</button></li>
+							<li><button type="button" class="btn btn-danger btn-sm" onclick="window.location.href='/admin/user/editUserInfo';">添加</button></li>
+						</ul>
+					</form>
+				</div>
+			</if>
+			<div class="box-body">
+				<table class="table table-bordered table-hover">
+					<tbody>
+						<tr>
+							<th style="width: 40px">ID</th>
+							<th>用户名</th>
+							<th>姓名</th>
+							<th>昵称</th>
+							<th>性别</th>
+							<th>岗位</th>
+							<th>状态</th>
+							<th style="width: 350px">操作</th>
+						</tr>
+						<if condition="count($userDepartmentList) eq 0"><tr><td class="text-center" colspan="8">暂无数据...</td></tr></if>
+						<foreach name="userDepartmentList" item="userDepartment">
+                         	<tr>
+                         		<td colspan="8" style=""><label style="width:250px;font-weight: bold;" class="position-relative">{$userDepartment.departmentInfo.name}</label></td>
+                         	</tr>
+                         	<foreach name="userDepartment.userList" item="user">
+                         		<tr>
+                         			<td>{$user.id}</td>
+                         			<td>{$user.username}</td>
+                         			<td>{$user.name}</td>
+                         			<td>{$user.nickname}</td>
+                         			<td>{$user['sex']==1?'男':'女'}</td>
+                         			<td><php>echo $positionList[$user['position_id']]['name'];</php></td>	                            			
+									<td>{$user['status']==1?'<span class="label label-success">正常</span>':'<span class="label label-danger">已关闭</span>'}</td>
+                         			<td>
+										<ul class="list-inline">
+											<li><button class="btn btn-info btn-xs" type="button" onclick="window.location.href='/admin/user/userFunctionList?user_id={$user.id}'">查看权限</button></li>
+											<li><button class="btn btn-success btn-xs" type="button" onclick="window.location.href='/admin/user/setUserFunction?user_id={$user.id}'">设置权限</button></li>
+											<li><button class="btn btn-primary btn-xs" type="button" onclick="window.location.href='/admin/user/setUserExtFunction?user_id={$user.id}'">扩展设置</button></li>
+											<li><button class="btn btn-warning btn-xs" type="button" onclick="window.location.href='/admin/user/editUserInfo?id={$user.id}'">修改</button></li>
+											<if condition="$user.status eq 1">
+												<li><button class="btn btn-danger btn-xs close-btn" type="button" data-id="{$user.id}" data-status="-1">关闭账号</button></li>
+											<else/>
+												<li><button class="btn btn-danger btn-xs close-btn" type="button" data-id="{$user.id}" data-status="1">开启账号</button></li>
+											</if>
+										</ul>
+                         			</td>
+                         		</tr>
+                         	</foreach>
+                         </foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	//关闭/开启账号
+	$(".close-btn").click(function(){
+		var user_id = $(this).attr('data-id');
+		var status = $(this).attr('data-status');
+		
+		var msg = '确定要关闭该账号吗？';
+		if(status == 1) {
+			msg = '确定要开启该账号吗？';
+		}
+		
+		ArtDialogHlp.showConfirm('提示', msg, function(){
+			$.post("/admin/user/deleteUser", {user_id:user_id, status:status}, function(data) {
+            	if(data.Code == 999) {
+            		ArtDialogHlp.showInfo('提示', '操作成功', function(){
+    					window.location.href = '/admin/user/userList';
+    				});
+    			} else {
+    				ArtDialogHlp.showInfo('提示', data.Msg);
+    			}
+            },'json');
+		});			
+	});
+});
+</script>

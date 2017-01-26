@@ -1,0 +1,218 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>功能列表</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">权限管理</li>
+			<li class="active">功能列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" method="get" action="javascript:;">
+					<ul class="list-inline">
+						<li><button class="btn btn-info btn-sm add-btn" type="button">新增功能</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 40px">ID</th>
+							<th>功能名</th>
+							<th>URL</th>
+							<th>功能组</th>
+							<th style="width: 50px">操作</th>
+						</tr>
+						<if condition="count($functionGroupList) eq 0"><tr><td class="text-center" colspan="5">暂无数据...</td></tr></if>
+						<foreach name="functionGroupList" item="functionGroup">
+                         	<tr>
+                         		<td colspan="5"><label style="width:250px;font-weight: bold;" class="position-relative">{$functionGroup.name}</label></td>
+                         	</tr>
+                         	<foreach name="functionGroup.functionList" item="function">
+                         		<tr>
+                         			<td>{$function.id}</td>
+                         			<td>{$function.name}</td>
+                         			<td><a target="_black" href="{$function.path}">{$function.path}</a></td>
+                         			<td>{$functionGroup.name}</td>
+                         			<td><button class="btn btn-danger btn-xs update-btn" type="button" data-id="{$function.id}" data-name="{$function.name}" data-path="{$function.path}" data-group-id="{$functionGroup.id}">修改</button></td>
+                         		</tr>
+                         	</foreach>
+                         </foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+$(function(){
+    var functionGroupListJson = '{$functionGroupList|json_encode}';
+    var functionGroupList = JSON.parse(functionGroupListJson);
+
+    $(".add-btn").click(function(){
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="name" class="col-sm-3 control-label">功能名</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="name">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="path" class="col-sm-3 control-label">URL</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="path">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="group_id" class="col-sm-3 control-label">功能组</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<select class="form-control" id="group_id">');
+        $.each(functionGroupList, function(key,functionGroup){
+            html.push('<option value="'+functionGroup.id+'">'+functionGroup.name+'</option>');
+        });
+        html.push('</select>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+
+        html.push('<div class="box-footer">');
+        html.push('<button type="button" class="btn btn-info pull-right add-commit-btn">提交</button>');
+        html.push('</div>');
+
+        html.push('</form>');
+
+        var dialogObj = {
+            title: "新增功能",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:400,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        $(".add-commit-btn").click(function(){
+            var name = $.trim($("#name").val());
+            var path = $.trim($("#path").val());
+            var group_id = $("#group_id").val();
+
+            if(name == '') {
+                ArtDialogHlp.showInfo('提示', '请填写功能名称');
+                return false;
+            }
+
+            if(path == '') {
+                ArtDialogHlp.showInfo('提示', '请填写URL');
+                return false;
+            }
+
+            $.post('/admin/auth/saveFunction', {name:name, path:path, group_id:group_id}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.href = '/admin/auth/functionList';
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+
+    $(".update-btn").click(function(){
+        var id = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+        var path = $(this).attr('data-path');
+        var group_id = $(this).attr('data-group-id');
+
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="name" class="col-sm-3 control-label">功能名</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="name" value="' + name + '">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="path" class="col-sm-3 control-label">URL</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="path" value="' + path + '">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="group_id" class="col-sm-3 control-label">功能组</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<select class="form-control" id="group_id">');
+        $.each(functionGroupList, function(key,functionGroup){
+            html.push('<option value="'+functionGroup.id+'" ' + (group_id == functionGroup.id ? 'selected' : '') + '>'+functionGroup.name+'</option>');
+        });
+        html.push('</select>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+
+        html.push('<div class="box-footer">');
+        html.push('<button type="button" class="btn btn-info pull-right update-commit-btn">提交</button>');
+        html.push('</div>');
+
+        html.push('</form>');
+
+        var dialogObj = {
+            title: "修改功能",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:400,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        $(".update-commit-btn").click(function(){
+            var name = $.trim($("#name").val());
+            var path = $.trim($("#path").val());
+            var group_id = $("#group_id").val();
+
+            if(name == '') {
+                ArtDialogHlp.showInfo('提示', '请填写功能名称');
+                return false;
+            }
+
+            if(path == '') {
+                ArtDialogHlp.showInfo('提示', '请填写URL');
+                return false;
+            }
+
+            $.post('/admin/auth/saveFunction', {id : id, name:name, path:path, group_id:group_id}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.href = '/admin/auth/functionList';
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+});
+</script>

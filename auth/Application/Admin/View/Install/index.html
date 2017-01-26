@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>聚群 | 权限系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.6 -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/bootstrap/css/bootstrap.min')}">
+  <!-- Pace style -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/plugins/pace/pace.min')}">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/plugins/font-awesome-4.6.3/css/font-awesome.min')}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/plugins/ionicons-2.0.1/css/ionicons.min')}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/dist/css/AdminLTE.min')}">
+  <!-- artDialog style -->
+  <link rel="stylesheet" href="{:load_css('AdminLTE/plugins/artDialog/css/ui-dialog')}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition login-page">
+    <div class="container">
+      <div class="starter-template">
+        <h3 class="text-center">系统安装</h3>
+        <ul class="timeline">
+            <li>
+                <i class="fa fa-envelope bg-blue"></i>
+                <div class="timeline-item">
+                    <h3 class="timeline-header"><a href="javascript:;">说明</a></h3>
+                    <div class="timeline-body">
+                        <ol>
+                            <li>系统安装前请确保mysql服务已经开启</li>
+                            <li>在配置文件（auth/Application/Common/Conf/config.php）中填写数据库相关配置：
+                                <ol>
+                                    <li>DB_TYPE：数据库类型，默认mysql</li>
+                                    <li>DB_HOST：数据库服务器ip</li>
+                                    <li>DB_NAME：数据库名称</li>
+                                    <li>DB_USER：用户名</li>
+                                    <li>DB_PWD：密码</li>
+                                    <li>DB_PORT：端口</li>
+                                </ol>
+                            </li>
+                            <li>为确保安全，系统安装后请将InstallController删除，或在InstallController的__construct方法中添加exit()语句，确保当前页面不能访问。</li>
+                            <li>该页面功能主要为了方便对权限系统进行初始化操作，您可以使用自己的方式完成初始化过程，并不需依赖该功能。</li>
+                        </ol>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <i class="fa fa-envelope bg-blue"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> step 1</span>
+                    <h3 class="timeline-header"><a href="javascript:;">配置检测</a></h3>
+                    <div class="timeline-body">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 10px">#</th>
+                                    <th style="width: 120px">配置项</th>
+                                    <th>值</th>
+                                    <th style="width: 40px">状态</th>
+                                </tr>
+                                <foreach name="configList" item="config" key="index">
+                                    <tr>
+                                        <td>{$index+1}.</td>
+                                        <td>{$config.key}</td>
+                                        <td>{$config.value}</td>
+                                        <td>
+                                            <if condition="$config.status eq 1">
+                                                <span class="badge bg-green"><i class="fa fa-fw fa-check"></i></span>
+                                            <else/>
+                                                <span class="badge bg-red"><i class="fa fa-fw fa-close"></i></span>
+                                            </if>
+                                        </td>
+                                    </tr>
+                                </foreach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <i class="fa fa-envelope bg-blue"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> step 2</span>
+                    <h3 class="timeline-header"><a href="javascript:;">创建数据库</a></h3>
+                    <div class="timeline-body">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 150px">数据库名</th>
+                                    <th>状态</th>
+                                    <th style="width: 80px">操作</th>
+                                </tr>
+                                <tr>
+                                    <td>{$database.name}</td>
+                                    <td>
+                                        <if condition="$database.db_exists eq 1">
+                                            <span class="badge bg-green"><i class="fa fa-fw fa-check"></i></span>
+                                        <else/>
+                                            <span class="badge bg-red"><i class="fa fa-fw fa-close"></i></span>
+                                        </if>
+                                        {$database.msg}
+                                    </td>
+                                    <td><if condition="$database.status eq 1"><a class="btn btn-primary btn-xs create-db-btn">创建数据库</a><else/>-</if></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <i class="fa fa-envelope bg-blue"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> step 3</span>
+                    <h3 class="timeline-header"><a href="javascript:;">创建数据表</a></h3>
+                    <div class="timeline-body">
+                        <assign name="create_status" value="0" />
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 150px">数据表名</th>
+                                    <th>说明</th>
+                                    <th>状态</th>
+                                    <th>建表SQL</th>
+                                    <th style="width: 80px">操作</th>
+                                </tr>
+                                <foreach name="tableList" item="table">
+                                    <tr>
+                                        <td>{$table.name}</td>
+                                        <td>{$table.desc}</td>
+                                        <td>
+                                            <if condition="$table.tb_exists eq 1">
+                                                <span class="badge bg-green"><i class="fa fa-fw fa-check"></i></span>
+                                            <else/>
+                                                <span class="badge bg-red"><i class="fa fa-fw fa-close"></i></span>
+                                            </if>
+                                            {$table.msg}
+                                        </td>
+                                        <td><empty name="table.sql">-<else/><a class="btn btn-info btn-xs show-tb-sql-btn" data-sql="{$table.sql}" data-table="{$table.name}">查看</a></empty></td>
+                                        <td><if condition="$table.status eq 1"><a class="btn btn-primary btn-xs create-tb-btn" data-table="{$table.name}">创建数据表</a><assign name="create_status" value="1" /><else/>-</if></td>
+                                    </tr>
+                                </foreach>
+                            </tbody>
+                        </table>
+                        <if condition="$create_status eq 1"><a class="btn btn-danger btn-xs create-all-tb-btn pull-right" style="margin-right:10px;">一键创建</a></if>
+                    </div>
+                    <div class="timeline-footer">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <i class="fa fa-envelope bg-blue"></i>
+                <div class="timeline-item">
+                    <span class="time"><i class="fa fa-clock-o"></i> step 4</span>
+                    <h3 class="timeline-header"><a href="javascript:;">初始化权限</a></h3>
+                    <div class="timeline-body">
+                        <div class="box box-info">
+                            <form class="form-horizontal">
+                                <div class="box-body">
+                                    <div class="form-group">
+                                        <label for="username" class="col-sm-2 control-label">用户名</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名" value="{$userInfo.username}">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="col-sm-2 control-label">密码</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-footer">
+                                    <notempty name="userInfo"><span class="text-red">您的系统已经包含权限数据，初始化权限操作会删除您系统中已有的账号和权限数据，请谨慎操作。</span></notempty>
+                                    <if condition="($config_status eq 1) AND ($db_exists eq 1) AND ($tb_exists eq 1)"><button type="button" class="btn btn-danger pull-right init-auth-btn">初始化权限</button></if>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li><i class="fa fa-clock-o bg-maroon"></i></li>
+        </ul>
+      </div>
+    </div>
+<!-- jQuery 2.2.3 -->
+<script src="{:load_js('AdminLTE/plugins/jQuery/jquery-2.2.3.min')}"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="{:load_js('AdminLTE/bootstrap/js/bootstrap.min')}"></script>
+<!-- PACE -->
+<script src="{:load_js('AdminLTE/plugins/pace/pace.min')}"></script>
+<!-- artDialog -->
+<script src="{:load_js('AdminLTE/plugins/artDialog/dist/dialog-min')}"></script>
+<!-- artDialog helper -->
+<script src="{:load_js('AdminLTE/plugins/artDialog/dist/dialog-hlp')}"></script>
+<script>
+$(function () {
+    $(".create-db-btn").click(function(){
+        ArtDialogHlp.showConfirm('提示', '确定要创建数据库吗？', function(){
+            $.post('/admin/install/ajaxCreateDB', {}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+    					window.location.reload();
+    				});
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+
+    $(".create-tb-btn").click(function(){
+        var table = $(this).attr('data-table');
+        ArtDialogHlp.showConfirm('提示', '确定要创建'+table+'表吗？', function(){
+            $.post('/admin/install/ajaxCreateTb', {table : table}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+    					window.location.reload();
+    				});
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+
+    $(".create-all-tb-btn").click(function(){
+        ArtDialogHlp.showConfirm('提示', '确定要一键创建这些表吗？', function(){
+            $.post('/admin/install/ajaxCreateAllTb', {}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+    					window.location.reload();
+    				});
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+
+    $(".show-tb-sql-btn").click(function(){
+        var sql = $(this).attr('data-sql');
+        var table = $(this).attr('data-table');
+
+        var d = dialog({
+            title: table + '表建表SQL',
+            content: "<code>" + $.trim(sql).replace(/\r\n/g,"<br>").replace(/\n/g,"<br>") + "</code>"
+        });
+        d.showModal();
+    });
+
+    $(".init-auth-btn").click(function(){
+        var username = $.trim($("#username").val());
+        var password = $.trim($("#password").val());
+
+        if(username == '') {
+            ArtDialogHlp.showInfo('提示', '请填写用户名');
+            return false;
+        }
+
+        if(password == '') {
+            ArtDialogHlp.showInfo('提示', '请填写密码');
+            return false;
+        }
+
+        ArtDialogHlp.showConfirm('提示', '确定要初始化权限吗？', function(){
+            $.post('/admin/install/ajaxInitAuth', {username : username, password : password}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+    					window.location.reload();
+    				});
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+});
+</script>
+</body>
+</html>

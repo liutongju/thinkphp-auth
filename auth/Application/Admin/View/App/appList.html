@@ -1,0 +1,97 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>应用列表</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">应用管理</li>
+			<li class="active">应用列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" method="get" action="javascript:;">
+					<ul class="list-inline">
+						<li><button class="btn btn-info btn-sm" type="button" onclick="window.location.href='/admin/app/editApp'">新增应用</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 40px">ID</th>
+							<th>APP ID</th>
+							<th>应用名称</th>
+							<th>是否加密</th>
+							<th>应用类型</th>
+							<th>应用状态</th>
+							<th>添加时间</th>
+							<th style="width: 185px">操作</th>
+						</tr>
+						<if condition="count($appList) eq 0"><tr><td class="text-center" colspan="8">暂无数据...</td></tr></if>
+						<foreach name="appList" item="app">
+                        	<tr>
+                        		<td>{$app.id}</td>
+                        		<td>{$app.app_id}</td>
+                        		<td>{$app.name}</td>
+                        		<td><if condition="$app.is_encryption eq 1">加密<else/>不加密</if></td>
+                        		<td>
+                       			    <switch name="app.type"> 
+                       			    	<case value="1">内部系统</case> 
+                       			    	<case value="2">APP</case> 
+                       			    	<case value="3">WEB站点</case> 
+                       			    	<default />外部应用
+									</switch>
+								</td>
+                       			<td><if condition="$app.status eq 1">正常<else/>已关闭</if></td>
+                        		<td>{$app.create_time|date="Y-m-d",###}</td>
+                        		<td>
+									<ul class="list-inline">
+										<if condition="$app.status eq 1">
+											<li><button class="btn btn-info btn-xs" type="button" onclick="window.location.href='/admin/app/editApp?id={$app.id}'">编辑</button></li>
+											<if condition="$app.type eq 2">
+												<li><button class="btn btn-primary btn-xs" type="button" onclick="window.location.href='/admin/app/versionList?id={$app.id}'">版本列表</button></li>
+											</if>
+											<li><button class="btn btn-danger btn-xs delete-btn" type="button" data-id="{$app.id}" data-status="-1">关闭</button></li>
+										<else/>
+											<li><button class="btn btn-warning btn-xs delete-btn" type="button" data-id="{$app.id}" data-status="1">开启</button></li>
+										</if>
+									</ul>
+                        		</td>
+                        	</tr>
+                        </foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	//删除应用
+	$(".delete-btn").click(function(){
+		var id = $(this).attr('data-id');
+        var status = $(this).attr('data-status');
+
+        if(status == 1) {
+            var msg = '确定要开启该应用？';
+		} else {
+            var msg = '确定要关闭该应用？';
+		}
+
+		ArtDialogHlp.showConfirm('警告', msg, function(){
+			$.post('/admin/app/deleteApp', {id : id, status : status}, function(data){
+				if(data.Code == 999) {
+					ArtDialogHlp.showInfo('提示', '操作成功', function(){
+						window.location.href = '/admin/app/appList';
+					});
+				} else {
+					ArtDialogHlp.showInfo('提示', data.Msg);
+				}
+			}, 'json');
+		});
+	});
+});
+</script>

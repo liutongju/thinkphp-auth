@@ -1,0 +1,110 @@
+<footer class="main-footer">
+	<div class="pull-right hidden-xs">为社群而生</div>
+	<strong>Copyright &copy; 2016 <a href="#">juqun.mobi</a>.
+	</strong> 聚群网络.
+</footer>
+<aside class="control-sidebar control-sidebar-dark">
+	<ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+		<li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab">控制面板</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="control-sidebar-home-tab">
+			<h3 class="control-sidebar-heading">修改密码</h3>
+			<ul class="control-sidebar-menu">
+				<li class="margin"><input type="password" placeholder="原始密码" id="old_pass" name="old_pass" class="form-control"></li>
+				<li class="margin"><input type="password" placeholder="新密码" id="new_pass" name="new_pass" class="form-control"></li>
+				<li class="margin"><button class="btn bg-olive btn-flat btn-block" type="button" id="update_password"><i class="fa fa-send"></i> 修改密码</button></li>
+			</ul>
+
+			<h3 class="control-sidebar-heading">操作</h3>
+			<ul class="control-sidebar-menu">
+				<li class="margin"><button class="btn bg-maroon btn-flat btn-block" type="button" id="refresh_auth"><i class="fa fa-refresh"></i> 刷新权限</button></li>
+			</ul>
+		</div>
+	</div>
+	<ul class="control-sidebar-menu text-center" style="margin-top: 80px;">
+		<li><img src="{:load_img('AdminLTE/dist/img/icon.png')}" width="60px" height="60px"></li>
+	</ul>
+</aside>
+<div class="control-sidebar-bg"></div>
+</div>
+<script type="text/javascript">
+$(function(){
+	//页面加载进度条
+	$(document).ajaxStart(function() { Pace.restart(); });
+
+    //初始化下拉列表控件
+    $('select').select2();
+
+    //初始化日期控件
+    $('.datepicker').datepicker({
+        autoclose: true
+    });
+
+    //单选框、复选框
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue',
+        increaseArea: '20%'
+    });
+
+	//修改密码
+	$("#update_password").click(function(){
+	    var old_password = $.trim($("#old_pass").val());
+	    var new_password = $.trim($("#new_pass").val());
+	    
+	    if(old_password == '') {
+	    	ArtDialogHlp.showInfo('提示', '请输入原始密码');
+	        return false;
+	    }        
+	    if(new_password == '') {
+	    	ArtDialogHlp.showInfo('提示', '请输入新密码');
+	        return false;
+	    }        
+	    if(new_password == old_password) {
+	    	ArtDialogHlp.showInfo('提示', '新密码和原始密码相同');
+	        return false;
+	    }
+	    if(new_password.length<6 || new_password.length>16) {
+	    	ArtDialogHlp.showInfo('提示', '密码长度必须大于6位小于16位');
+	        return false;
+	    }
+	    
+	    $.post('/admin/index/updatePassword', {old_password:old_password, new_password:new_password}, function(data) {
+	    	if(data.Code == 999) {
+	    		ArtDialogHlp.showInfo('提示', data.Msg, function(){
+	    			window.location.href = '/admin';
+	    		});
+			} else {
+				ArtDialogHlp.showInfo('提示', data.Msg);
+			}
+	    }, 'json');
+	});  
+	
+	//刷新权限
+	$("#refresh_auth").click(function(){
+		$.get('/admin/index/refreshAuth',function(data) {
+			if(data.Code == 999) {
+				ArtDialogHlp.showInfo('提示', data.Msg, function(){
+	    			window.location.href = '/admin';
+	    		});
+			} else {
+				ArtDialogHlp.showInfo('提示', data.Msg);
+			}
+		}, 'json');
+	});
+
+	//记录菜单栏状态
+    $(".main-sidebar-toggle").click(function(){
+        if($('body').hasClass('sidebar-collapse')) {
+            var cls = "";
+        } else {
+            var cls = "sidebar-collapse";
+        }
+
+        localStorage.body_cls = cls;
+    });
+});
+</script>
+</body>
+</html>

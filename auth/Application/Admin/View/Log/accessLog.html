@@ -1,0 +1,195 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>用户访问日志</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">日志管理</li>
+			<li class="active">访问日志列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" action="/admin/log/accessLog" method="get">
+					<ul class="list-inline">
+						<li>用户：
+							<select class="form-control input-lg" name="user_id" id="user_id">
+								<option value="0">选择用户</option>
+								<foreach name="userList" item="user">
+									<option value="{$user.id}" {$user['id']==$user_id?'selected':''}>{$user.name}</option>
+								</foreach>
+							</select>
+						</li>
+						<li>功能组：
+							<select class="form-control input-lg" name="function_group_id" id="function_group_id">
+								<option value="0">选择功能组</option>
+								<foreach name="functionGroupList" item="functionGroup">
+									<option value="{$functionGroup.id}" {$functionGroup['id']==$function_group_id?'selected':''}>{$functionGroup.name}</option>
+								</foreach>
+							</select>
+						</li>
+						<li>功能：
+							<select class="form-control input-lg" name="function_id" id="function_id">
+								<option value="0">选择功能</option>
+								<foreach name="functionList" item="function">
+									<option value="{$function.id}" {$function['id']==$function_id?'selected':''}>{$function.name}</option>
+								</foreach>
+							</select>
+						</li>
+						<li>访问时间：<div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="start_time" name="start_time" value="{$start_time}" data-date-format="yyyy-mm-dd" readonly></div></li>
+						<li><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="end_time" name="end_time" value="{$end_time}" data-date-format="yyyy-mm-dd" readonly></div></li>
+						<li><button type="submit" class="btn btn-info btn-sm" id="save-btn">查询</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 60px">ID</th>
+							<th>用户</th>
+							<th>功能组</th>
+							<th>功能</th>
+							<th>url</th>
+							<th>POST参数</th>
+							<th>GET参数</th>
+							<th>SERVER</th>
+							<th>访问时间</th>
+						</tr>
+						<if condition="count($logList) eq 0"><tr><td class="text-center" colspan="9">暂无数据...</td></tr></if>
+						<foreach name="logList" item="log">
+							<tr>
+								<td>{$log.id}</td>
+								<td>{$log.name}</td>
+								<td>{$log.function_group_name}</td>
+								<td>{$log.function_name}</td>
+								<td>{$log.url}</td>
+								<td><if condition="$log.post neq '[]'"><a class="btn btn-info btn-xs show-params-btn" data-params='{$log.post}' data-type="POST">查看</a><else/>-</if></td>
+								<td><if condition="$log.get neq '[]'"><a class="btn btn-info btn-xs show-params-btn" data-params='{$log.get}' data-type="GET">查看</a><else/>-</if></td>
+								<td><if condition="$log.server_info neq ''"><a class="btn btn-info btn-xs show-server-btn" data-params='{$log.server_info}'>查看</a><else/>-</if></td>
+								<td>{$log.create_time|date="Y-m-d H:i:s",###}</td>
+							</tr>
+						</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="box-footer clearfix">{$page_html}</div>			
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+	$(function(){
+	    //选择功能组，加载功能
+	    $("#function_group_id").change(function(){
+			var function_group_id = $(this).val();
+			$.post('/admin/auth/ajaxFunctionList', {function_group_id : function_group_id}, function(data){
+			    var functionList = data.Data.functionList;
+
+			    var item = [];
+                item.push('<option value="0">选择功能</option>');
+
+			    if(functionList.length > 0) {
+                    functionList.forEach(function(func){
+                        item.push('<option value="'+func.id+'">'+func.name+'</option>');
+					});
+				}
+
+				$("#function_id").empty().html(item.join(""));
+			}, 'json');
+		});
+
+        $(".show-params-btn").click(function(){
+            var params = $.trim($(this).attr('data-params'));
+            var type = $(this).attr('data-type');
+
+            var d = dialog({
+                title: '查看' + type + '参数',
+                zIndex: 9999,
+                content: "<code>" + formatJson(params) + "</code>"
+            });
+            d.showModal();
+        });
+
+        $(".show-server-btn").click(function(){
+            var params = $(this).attr('data-params');
+
+            var d = dialog({
+                title: '查看SERVER信息',
+                zIndex: 9999,
+                content: "<code>" + $.trim(params).replace(/;/g,";<br>") + "</code>"
+            });
+            d.showModal();
+        });
+
+        //美化json
+        var formatJson = function(json) {
+            var i           = 0,
+                len          = 0,
+                tab         = "&nbsp;&nbsp;&nbsp;&nbsp;",
+                targetJson     = "",
+                indentLevel = 0,
+                inString    = false,
+                currentChar = null;
+
+            for (i = 0, len = json.length; i < len; i += 1) {
+                currentChar = json.charAt(i);
+
+                switch (currentChar) {
+                    case '{':
+                    case '[':
+                        if (!inString) {
+                            targetJson += currentChar + "<br>" + repeat(tab, indentLevel + 1);
+                            indentLevel += 1;
+                        } else {
+                            targetJson += currentChar;
+                        }
+                        break;
+                    case '}':
+                    case ']':
+                        if (!inString) {
+                            indentLevel -= 1;
+                            targetJson += "<br>" + repeat(tab, indentLevel) + currentChar;
+                        } else {
+                            targetJson += currentChar;
+                        }
+                        break;
+                    case ',':
+                        if (!inString) {
+                            targetJson += ",<br>" + repeat(tab, indentLevel);
+                        } else {
+                            targetJson += currentChar;
+                        }
+                        break;
+                    case ':':
+                        if (!inString) {
+                            targetJson += ": ";
+                        } else {
+                            targetJson += currentChar;
+                        }
+                        break;
+                    case ' ':
+                    case "\n":
+                    case "\t":
+                        if (inString) {
+                            targetJson += currentChar;
+                        }
+                        break;
+                    case '"':
+                        if (i > 0 && json.charAt(i - 1) !== '\\') {
+                            inString = !inString;
+                        }
+                        targetJson += currentChar;
+                        break;
+                    default:
+                        targetJson += currentChar;
+                        break;
+                }
+            }
+            return targetJson;
+        };
+
+        var repeat = function(s, count) {
+            return new Array(count + 1).join(s);
+        };
+	});
+</script>

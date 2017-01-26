@@ -1,0 +1,237 @@
+<style type="text/css">
+	.user-ipt {
+		border:none;
+		outline:none;
+		height:30px;
+		text-align:right;
+	}
+</style>
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>{$userInfo?'编辑':'新增'}用户</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">账号管理</li>
+			<li class="active"><a href="/admin/user/userList">用户列表</a></li>
+			<li class="active">{$userInfo?'编辑':'新增'}用户</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="row">
+			<form action="javascrip:;" method="post" id="form">
+				<input type="hidden" name="user_id" id="user_id" value="{$userInfo.id}" />
+				<div class="col-xs-6">
+					<div class="box box-primary">
+						<div class="box-body box-profile">
+							<notempty name='userInfo.img'>
+								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="{:load_img($userInfo['img'])}" alt="员工照片" onclick="$('#upload_file').trigger('click')">
+							<else/>
+								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="{:load_img('AdminLTE/dist/img/user2-160x160.jpg')}" alt="员工照片" onclick="$('#upload_file').trigger('click')">
+							</notempty>
+							<input type="file" style=" width:0; height:0; overflow:hidden;" name="upload_file" id="upload_file"/>
+							<input type="hidden" name="img" id="hidden_img" value="{$userInfo.img}" />
+							<p class="text-muted text-center">点击上传照片</p>
+							<ul class="list-group list-group-unbordered">
+								<li class="list-group-item">
+									<b>姓名</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="name" name="name" value="{$userInfo.name}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>昵称</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="nickname" name="nickname" value="{$userInfo.nickname}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>性别</b>
+									<div class="pull-right">
+										<ul class="list-inline">
+											<li><label><input type="radio" value="1" name="sex" {$userInfo['sex']!=2?'checked':''}> 男</label></li>
+											<li><label><input type="radio" value="2" name="sex" {$userInfo['sex']==2?'checked':''}> 女</label></li>
+										</ul>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>微信</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="wechat" name="wechat" value="{$userInfo.wechat}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>QQ</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="qq" name="qq" value="{$userInfo.qq}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>邮箱</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="email" name="email" value="{$userInfo.email}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>手机</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="mobile" name="mobile" value="{$userInfo.mobile}">
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="box box-primary">
+						<div class="box-body box-profile">
+							<ul class="list-group list-group-unbordered">
+								<li class="list-group-item">
+									<b>用户名</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="username" name="username" value="{$userInfo.username}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>密码</b>
+									<div class="pull-right col-xs-8">
+										<input type="password" class="user-ipt col-xs-12" id="password" name="password" value="">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>工号</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="work_number" name="work_number" value="{$userInfo.work_number}" readonly>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>部门</b>
+									<div class="pull-right" style="width:200px;">
+										<select class="col-xs-12" name="department_id" id="department_id">
+											<foreach name="departmentList" item="department">
+												<option value="{$department.id}" {$department['id']==$userInfo['department_id']?'selected':''}>{$department.name}</option>
+											</foreach>
+										</select>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>岗位</b>
+									<div class="pull-right" style="width:200px;">
+										<select class="col-xs-12" name="position_id" id="position_id">
+											<foreach name="positionList" item="position">
+												<option value="{$position.id}" {$position['id']==$userInfo['position_id']?'selected':''}>{$position.name}</option>
+											</foreach>
+										</select>
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>毕业学校</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="school" name="school" value="{$userInfo.school}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>地址</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="address" name="address" value="{$userInfo.address}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>技能</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" placeholder="多个技能用逗号（,）分隔" id="skill" name="skill" value="{$userInfo.skill}">
+									</div>
+								</li>
+								<li class="list-group-item">
+									<b>员工介绍</b>
+									<div class="pull-right col-xs-8">
+										<input type="text" class="user-ipt col-xs-12" id="desc" name="desc" value="{$userInfo.desc}">
+									</div>
+								</li>
+								<li class="list-group-item" style="height:50px;">
+									<b>操作</b>
+									<div class="pull-right">
+										<button type="button" class="btn btn-info btn-sm save-btn">提交</button>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	//上传照片
+	$("#upload_file").change(function(){
+		window.uploadImage();
+	});
+	
+	window.uploadImage = function() {
+		var picture = $("#upload_file").val();
+
+		if (!picture.match(/.jpg|.gif|.png|.bmp/i)) {
+			//验证图片格式
+			ArtDialogHlp.showInfo('提示', '您上传的图片格式不正确，请重新选择！');
+			return false;
+		}
+		
+		$.ajaxFileUpload({
+			url : "/admin/upload/index", //用于文件上传的服务器端请求地址
+			secureuri : false, //是否需要安全协议，一般设置为false
+			fileElementId : 'upload_file', //文件上传域的ID
+			dataType : 'json', //返回值类型 一般设置为json
+			data : {
+				action : 'images',
+				extend : 'authuser'
+			},
+			success : function(data, status) {
+				if(data.Code == 999) {
+                    $(".file_upload_show").show().attr("src",data.Data.file_url);
+                    $("#hidden_img").val(data.Data.rel_url);
+                } else {
+                	ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+				$("#upload_file").change(function(){
+					window.uploadImage();
+				});
+			}
+		});
+	};
+	
+	//保存用户
+	$(".save-btn").click(function(){
+		var id = $("#user_id").val();
+        var name = $.trim($("#name").val());
+		var username = $.trim($("#username").val());
+		var password = $.trim($("#password").val());
+		
+		if(username == '') {
+			ArtDialogHlp.showInfo('提示', '请填写用户名');
+            return false;
+        }
+		
+		if(id == '' && password == '') {
+			ArtDialogHlp.showInfo('提示', '请填写密码');
+            return false;
+        }
+		
+		if(name == '') {
+			ArtDialogHlp.showInfo('提示', '请填写用户姓名');
+            return false;
+        }
+		
+		$.post('/admin/user/saveUser', $('#form').serialize(), function(data){
+			if(data.Code == 999) {
+				ArtDialogHlp.showInfo('提示', '操作成功', function(){
+					window.location.href = '/admin/user/userList';
+				});
+			} else {
+				ArtDialogHlp.showInfo('提示', data.Msg);
+			}
+		}, 'json');
+	});
+});
+</script>

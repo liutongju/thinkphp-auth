@@ -1,0 +1,62 @@
+<aside class="main-sidebar">
+	<section class="sidebar">
+		<div class="user-panel">
+			<div class="pull-left image">
+				<img src="{:load_img($_user_['img'])}" class="user-avatar img-circle" alt="User Image">
+			</div>
+			<div class="pull-left info">
+				<p>{$_user_.nickname}</p>
+				<a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+			</div>
+		</div>
+		<form action="#" method="get" class="sidebar-form">
+			<div class="input-group">
+				<input type="text" name="q" class="form-control" placeholder="搜索...">
+				<span class="input-group-btn">
+					<button type="submit" name="search" id="search-btn" class="btn btn-flat">
+						<i class="fa fa-search"></i>
+					</button>
+				</span>
+			</div>
+		</form>
+		<ul class="sidebar-menu">
+			<li class="header">菜单</li>
+			<foreach name="_menuList_" item="menu" key="menu_title"> 
+				<assign name="active" value="" /> 
+				<assign name="open" value="" /> 
+				<if condition="$_curr_parent_menu_ eq $menu_title"> 
+					<assign name="active" value="active" /> 
+					<assign name="open" value="menu-open" /> 
+				</if> 
+				<if condition="count($menu['subMenuList']) gt 0">
+					<li class="treeview {$active}">
+						<a href="#">
+							<i class="{$menu.info.icon}"></i>
+							<span>{$menu_title}</span> 
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu {$open}">
+							<foreach name="menu['subMenuList']" item="sub_menu" key="sub_menu_title"> 
+								<assign name="sub_active" value="" />
+								<if condition="$sub_menu_title eq $_curr_menu_"> 
+									<assign name="sub_active" value="active" /> 
+								</if>
+								<li class="{$sub_active}">
+									<a href="{$sub_menu.path}">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-circle-o"></i> {$sub_menu_title}
+									</a>
+								</li>
+							</foreach>
+						</ul>
+					</li>
+				<else />
+					<li class="{$active}">
+						<a href="{$menu.info.path}"><i class="{$menu.info.icon}"></i><span>{$menu_title}</span></a>
+					</li>
+				</if>
+			</foreach>
+		</ul>
+	</section>
+</aside>

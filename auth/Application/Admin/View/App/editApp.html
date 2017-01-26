@@ -1,0 +1,208 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>{$appInfo?'编辑':'新增'}应用</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">应用管理</li>
+			<li class="active"><a href="/admin/app/appList">应用列表</a></li>
+			<li class="active">{$appInfo?'编辑':'新增'}应用</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-body">
+				<form class="form-horizontal" role="form" action="javascrip:;" method="post">
+					<input type="hidden" name="id" id="id" value="{$appInfo.id}" />
+					<div class="form-group">
+						<label for="app_id" class="col-sm-3 control-label"> AppID </label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" placeholder="应用ID" id="app_id" name="app_id" value="{$appInfo.app_id}">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="name" class="col-sm-3 control-label"> 应用名称 </label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" placeholder="应用名称" id="name" name="name" value="{$appInfo.name}">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="app_secret" class="col-sm-3 control-label"> 秘钥 </label>
+						<div class="col-sm-6">
+							<div class="input-group">
+                                <input type="text" placeholder="app_secret(32位)" class="form-control" id="app_secret" name="app_secret" value="{$appInfo.app_secret}">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-flat" type="button" onclick="randomStr('app_secret',32)"> 随机生成</button>
+                                </span>
+                            </div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="token" class="col-sm-3 control-label"> 令牌 </label>
+						<div class="col-sm-6">
+							<div class="input-group">
+		                        <input type="text" placeholder="token(32位)" class="form-control" id="token" name="token" value="{$appInfo.token}">
+		                        <span class="input-group-btn">
+		                            <button class="btn btn-info btn-flat" type="button" onclick="randomStr('token',32)"> 随机生成</button>
+		                        </span>
+		                    </div>
+		                </div>
+                    </div>
+                    
+                    <div class="form-group">
+                         <label for="encoding_AESKey" class="col-sm-3 control-label"> 消息加解密密钥 </label>
+                         <div class="col-sm-6">
+                             <div class="input-group">
+                                 <input type="text" placeholder="encoding_AESKey(43位)" class="form-control" id="encoding_AESKey" name="encoding_AESKey" value="{$appInfo.encoding_aeskey}">
+                                 <span class="input-group-btn">
+                                     <button class="btn btn-info btn-flat" type="button" onclick="randomStr('encoding_AESKey',43)"> 随机生成</button>
+                                 </span>
+                             </div>                                    
+                         </div>
+                     </div>
+
+					<div class="form-group">
+						<label for="is_encryption" class="col-sm-3 control-label"> 是否需要加密 </label>
+						<div class="col-sm-6">
+							<select name="is_encryption" id="is_encryption" class="form-control">
+								<option value="0" {$appInfo['is_encryption']==0?'selected':''}>不需要</option>
+								<option value="1" {$appInfo['is_encryption']==1?'selected':''}>需要</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+                         <label for="type" class="col-sm-3 control-label"> 应用类型 </label>
+                         <div class="col-sm-6">
+                             <select name="type" id="type" class="form-control">
+                                 <option value="1" {$appInfo['type']==1?'selected':''}>内部系统</option>
+                                 <option value="2" {$appInfo['type']==2?'selected':''}>APP</option>
+                                 <option value="3" {$appInfo['type']==3?'selected':''}>WEB站点</option>
+                                 <option value="5" {$appInfo['type']==5?'selected':''}>第三方应用</option>
+                             </select>
+                         </div>
+                     </div>
+                     
+                     <div class="form-group">
+                         <label for="is_auth" class="col-sm-3 control-label"> 是否需要设置权限 </label>
+                         <div class="col-sm-6">
+                             <select name="is_auth" id="is_auth" class="form-control">
+								 <option value="0" {$appInfo['is_auth']==0?'selected':''}>不需要</option>
+								 <option value="1" {$appInfo['is_auth']==1?'selected':''}>需要</option>
+                             </select>
+                         </div>
+                     </div>
+                     
+                     <div class="form-group">
+                        <label for="domain" class="col-sm-3 control-label"> 域名 </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="域名" id="domain" name="domain" value="{$appInfo.domain}">
+                        </div>
+                    </div>
+
+					<div class="form-group">
+                        <label for="ip_list" class="col-sm-3 control-label"> IP白名单 </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="IP白名单" id="ip_list" name="ip_list" value="{$appInfo.ip_list}">
+                        </div>
+                    </div>
+					
+					<div class="form-group">
+						<label for="form-field-1" class="col-sm-3 control-label"></label>
+						<div class="col-sm-6">
+							<ul class="list-inline">
+								<li><button type="button" class="btn btn-info btn-sm" onclick="saveApp()">提交</button></li>
+								<li><button type="reset" class="btn btn-warning btn-sm">重置</button></li>
+							</ul>
+						</div>
+					</div>
+				</form>
+			</div>			
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+//生成随机字符串
+function createRandomString(len){
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var maxPos = chars.length;
+    var str = '';
+    for (i = 0; i < len; i++) {
+        str += chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return str;
+}
+
+//随机生成
+function randomStr(inputId,len){
+    var str = createRandomString(len);
+    $("#"+inputId).val(str);
+}
+
+function saveApp() {
+    var id = $("#id").val();
+    var name = $.trim($("#name").val());
+    var app_id = $.trim($("#app_id").val());
+    var app_secret = $.trim($("#app_secret").val());
+    var token = $.trim($("#token").val());
+    var encoding_AESKey = $.trim($("#encoding_AESKey").val());
+    var is_encryption = $("#is_encryption").val();
+    var type = $("#type").val();
+    var is_auth = $("#is_auth").val();
+    var domain = $("#domain").val();
+    var ip_list = $("#ip_list").val();
+    
+    if(name == '') {
+    	ArtDialogHlp.showInfo('提示', "请填写应用名称");
+        return false;
+    }
+    
+    if(app_id == '') {
+    	ArtDialogHlp.showInfo('提示', "请填写应用ID");
+        return false;
+    }
+    
+    if(app_secret == '') {
+    	ArtDialogHlp.showInfo('提示', "请填写应用秘钥");
+        return false;
+    }
+    
+    if(token == '') {
+    	ArtDialogHlp.showInfo('提示', "请填写令牌");
+        return false;
+    }
+    
+    if(encoding_AESKey == '') {
+    	ArtDialogHlp.showInfo('提示', "请填写消息加解密密钥");
+        return false;
+    }
+    
+    $.post('/admin/app/saveApp',
+    {
+        id : id,
+        name : name,
+        app_id : app_id,
+        app_secret : app_secret,
+        token : token,
+        encoding_AESKey : encoding_AESKey,
+        is_encryption : is_encryption,
+        type : type,
+        is_auth : is_auth,
+        domain : domain,
+        ip_list : ip_list
+        
+    },
+    function(data){
+    	if(data.Code == 999) {
+			ArtDialogHlp.showInfo('提示', '操作成功', function(){
+				window.location.href = "/admin/app/appList";
+			});
+		} else {
+			ArtDialogHlp.showInfo('提示', data.Msg);
+		}
+    },'json');
+}
+</script>

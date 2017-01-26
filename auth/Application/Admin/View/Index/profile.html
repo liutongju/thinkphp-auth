@@ -1,0 +1,129 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>个人主页</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">个人主页</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-widget widget-user">
+					<div style="background: url('{:load_img('AdminLTE/dist/img/photo1.png')}') center center;height:220px;" class="widget-user-header bg-black">
+						<h3 class="widget-user-username">{$_user_.nickname}</h3>
+						<h5 class="widget-user-desc">{$_user_.position_name}</h5>
+					</div>
+					<div class="widget-user-image" style="top:165px;cursor:pointer;" onclick="$('#upload_file').trigger('click')"><img alt="头像" src="{:load_img($_user_['img'])}" class="user-avatar img-circle"></div>
+					<input type="file" style=" width:0; height:0; overflow:hidden;" name="upload_file" id="upload_file"/>
+					<div class="box-footer">
+						<div class="row">
+							<div class="col-sm-4 border-right">
+								<div class="description-block">
+									<h5 class="description-header">{$_user_.wechat}</h5>
+									<span class="description-text">Wechat</span>
+								</div>
+							</div>
+							<div class="col-sm-4 border-right">
+								<div class="description-block">
+									<h5 class="description-header">{$_user_.qq}</h5>
+									<span class="description-text">QQ</span>
+								</div>
+							</div>							
+							<div class="col-sm-4">
+								<div class="description-block">
+									<h5 class="description-header">{$_user_.email}</h5>
+									<span class="description-text">E-mail</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">关于我</h3>
+					</div>
+					<div class="box-body">
+						<strong><i class="fa fa-book margin-r-5"></i> 个人信息</strong>
+						<p class="text-muted">{$_user_.name} - {$_user_['sex']==1?'男':'女'} - {$_user_.work_number} - {$_user_.department_name} - {$_user_.position_name}</p>
+						<hr>
+						<strong><i class="fa fa-book margin-r-5"></i> 毕业学校</strong>
+						<p class="text-muted">{$_user_.school}</p>
+						<hr>
+						<strong><i class="fa fa-map-marker margin-r-5"></i>地址</strong>
+						<p class="text-muted">{$_user_.address}</p>
+						<hr>
+						<strong><i class="fa fa-pencil margin-r-5"></i> 技能</strong>
+						<p>
+							<php>
+								$labelList = ['label-danger','label-success','label-info','label-warning', 'label-primary'];
+								$i = 0;
+								if(is_array($_user_['skillList']) && count($_user_['skillList']) > 0) {
+									foreach($_user_['skillList'] as $skill) {
+										echo '<span class="label '.$labelList[$i].'"> '.$skill.' </span>&nbsp;';
+										$i++;
+										if($i == count($labelList)) {
+											$i = 0;
+										}
+									}
+								}
+							</php>
+						</p>
+						<hr>
+						<strong><i class="fa fa-file-text-o margin-r-5"></i>个人介绍</strong>
+						<p>{$_user_.desc}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+    $(function(){
+        //上传照片
+        $("#upload_file").change(function(){
+            window.uploadImage();
+        });
+
+        window.uploadImage = function() {
+            var file_head = document.getElementById("upload_file"),
+                picture = file_head.value;
+
+            if (!picture.match(/.jpg|.gif|.png|.bmp/i)) {
+                //验证图片格式
+                ArtDialogHlp.showInfo('提示', '您上传的图片格式不正确，请重新选择！');
+                return false;
+            }
+
+            $.ajaxFileUpload({
+                url : "/admin/upload/index", //用于文件上传的服务器端请求地址
+                secureuri : false, //是否需要安全协议，一般设置为false
+                fileElementId : 'upload_file', //文件上传域的ID
+                dataType : 'json', //返回值类型 一般设置为json
+                data : {
+                    action : 'images',
+                    extend : 'authuser'
+                },
+                success : function(data, status) {
+                    if(data.Code == 999) {
+                        var file_url = data.Data.file_url;
+                        var rel_url = data.Data.rel_url;
+
+                        $.post('/admin/index/updateAvatar', {img : rel_url}, function(data2) {
+                            if(data2.Code == 999) {
+                                $(".user-avatar").attr('src', file_url);
+                            } else {
+                                ArtDialogHlp.showInfo('提示', data2.Msg);
+                            }
+                        }, 'json');
+                    } else {
+                        ArtDialogHlp.showInfo('提示', data.Msg);
+                    }
+                    $("#upload_file").change(function(){
+                        window.uploadImage();
+                    });
+                }
+            });
+        };
+    });
+</script>

@@ -1,0 +1,75 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>控制面板</h1>
+		<ol class="breadcrumb">
+			<li><a href="/"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">控制面板</li>
+		</ol>
+	</section>
+
+	<section class="content">
+		<div class="row">
+			<div class="col-lg-12 col-xs-12">
+				<div class="box">
+					<div class="box-header"></div>
+					<div class="box-body">
+						<a class="btn btn-app" href="/admin/user/editUserInfo"> <i class="fa fa-user"></i> 添加用户</a>
+						<a class="btn btn-app" href="/admin/app/editApp"> <i class="fa fa-android"></i> 添加应用</a>
+						<a class="btn btn-app" href="/admin/auth/functionList"> <i class="fa fa-dashboard"></i> 添加功能</a>
+						<a class="btn btn-app" href="/admin/auth/menuList"> <i class="fa fa-bars"></i> 添加菜单</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<assign name="_key" value="0" />
+			<foreach name="_appList_" item="_app">
+            	<div class="col-lg-3 col-xs-6">
+					<div class="small-box {$classList[$_key]}">
+						<div class="inner">
+							<h2>{$_app.name}</h2>
+							<p>
+								<if condition="($_app.type eq 1) OR ($_app.type eq 3)">
+									<a style="color:#FFF;" target="_black" href="http://{$_app.domain}">{$_app.domain}</a>
+								<else/>
+									{$_app.domain}
+								</if>								
+							</p>
+						</div>
+						<if condition="$_SESSION['_appid_'] eq $_app['app_id']">
+							<div class="icon">
+								<i class="fa fa-flag-o"></i>
+							</div>
+						</if>						
+						<a class="small-box-footer change-app-btn" href="javascript:;" data-is-auth='{$_app.is_auth}' data-app-id='{$_app.app_id}' >点击切换 <i class="fa fa-arrow-circle-right"></i></a>
+					</div>
+				</div>
+				<assign name="_key" value="$_key+1" />
+				<if condition="count($classList) eq $_key"><assign name="_key" value="0" /></if>
+            </foreach>
+		</div>
+	</section>
+</div>
+<script type="text/javascript">
+$(function(){
+	//切换应用
+	$(".change-app-btn").click(function(){
+		var app_id = $(this).attr('data-app-id');
+		var is_auth = $(this).attr('data-is-auth');
+		if(is_auth == 0) {
+			ArtDialogHlp.showInfo('提示', '该应用无需设置权限，无法切换');
+			return false;
+		}
+		
+		$.post('/admin/index/changeApp',{app_id:app_id},function(data){
+            if(data.Code == 999) {
+            	ArtDialogHlp.showInfo('提示', data.Msg, function(){
+					window.location.href = '/admin';
+				});
+            } else {
+            	ArtDialogHlp.showInfo('提示', data.Msg);
+            }
+        },'json');
+	});
+});
+</script>

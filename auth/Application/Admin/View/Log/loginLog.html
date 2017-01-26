@@ -1,0 +1,53 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>用户登录日志</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">日志管理</li>
+			<li class="active">登录日志列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" action="/admin/log/loginLog" method="get">
+					<ul class="list-inline">
+						<li>用户：
+							<select class="form-control input-lg" name="user_id" id="user_id">
+								<option value="0">选择用户</option>
+								<foreach name="userList" item="user">
+									<option value="{$user.id}" {$user['id']==$user_id?'selected':''}>{$user.name}</option>
+								</foreach>
+							</select>
+						</li>
+						<li>登录时间：<div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="start_time" name="start_time" value="{$start_time}" data-date-format="yyyy-mm-dd" readonly></div></li>
+						<li><div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="end_time" name="end_time" value="{$end_time}" data-date-format="yyyy-mm-dd" readonly></div></li>
+						<li><button type="submit" class="btn btn-info btn-sm" id="save-btn">查询</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 60px">ID</th>
+							<th>用户</th>
+							<th>IP</th>
+							<th>登录时间</th>
+						</tr>
+						<if condition="count($logList) eq 0"><tr><td class="text-center" colspan="4">暂无数据...</td></tr></if>
+						<foreach name="logList" item="log">
+							<tr>
+								<td>{$log.id}</td>
+								<td>{$log.name}</td>
+								<td>{$log.ip}</td>
+								<td>{$log.create_time|date="Y-m-d H:i:s",###}</td>
+							</tr>
+						</foreach>
+					</tbody>
+				</table>
+			</div>
+			<div class="box-footer clearfix">{$page_html}</div>			
+		</div>
+	</section>
+</div>

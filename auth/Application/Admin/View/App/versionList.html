@@ -1,0 +1,435 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>版本列表</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">应用管理</li>
+			<li class="active"><a href="/admin/app/appList">应用列表</a></li>
+			<li class="active">版本列表</li>
+			<li class="active"><span class="label label-warning">{$appInfo.name}</span></li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" method="get" action="javascript:;">
+					<ul class="list-inline">
+						<li><button class="btn btn-info btn-sm add-version-btn" type="button" data-app-name="{$appInfo.name}" data-app-id="{$appInfo.app_id}">发布新版本</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th>版本号</th>
+							<th>是否强制升级</th>
+							<th>发布时间</th>
+							<th>更新内容</th>
+							<th>安装包</th>
+							<th style="width: 110px">操作</th>
+						</tr>
+						<if condition="count($versionList) eq 0"><tr><td class="text-center" colspan="6">暂无数据...</td></tr></if>
+						<foreach name="versionList" item="version">
+                        	<tr>
+                        		<td>{$version.version}</td>
+								<td>
+									<switch name='version.is_update'>
+										<case value='1'><span class="label label-danger">强制升级</span></case>
+										<case value='0'><span class="label label-success">普通升级</span></case>
+									</switch>
+								</td>
+                        		<td>{$version.publish_time}</td>
+								<td>
+									<if condition="$version.update_desc eq ''">
+										-
+									<else/>
+										<button class="btn btn-success btn-xs show-desc-btn" type="button" data-update-desc="{$version.update_desc}" data-version="{$version.version}">查看</button>
+									</if>
+								</td>
+								<td><a class="btn btn-success btn-xs" href="{$version.package_url}">点击下载</a></td>
+                        		<td>
+									<ul class="list-inline">
+										<if condition="$version.status eq 1">
+											<li><button class="btn btn-info btn-xs edit-btn" type="button"
+														data-app-name="{$appInfo.name}"
+														data-app-id="{$appInfo.app_id}"
+														data-id="{$version.id}"
+														data-version="{$version.version}"
+														data-package="{$version.package}"
+														data-publish-time="{$version.publish_time}"
+														data-update-desc="{$version.update_desc}"
+														data-is-update="{$version.is_update}">修改</button></li>
+											<li><button class="btn btn-danger btn-xs delete-btn" type="button" data-id="{$version.id}">删除</button></li>
+										</if>
+									</ul>
+                        		</td>
+                        	</tr>
+                        </foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $(".show-desc-btn").click(function(){
+        var version = $(this).attr('data-version');
+        var update_desc = $(this).attr('data-update-desc');
+        var d = dialog({
+            title: '版本：' + version + ' 更新内容',
+            width:400,
+            content: $.trim(update_desc).replace(/\r\n/g,"<br>").replace(/\n/g,"<br>")
+        });
+        d.showModal();
+	});
+
+	//删除版本
+	$(".delete-btn").click(function(){
+		var id = $(this).attr('data-id');
+
+		ArtDialogHlp.showConfirm('警告', '确定要删除该版本吗？', function(){
+			$.post('/admin/app/deleteAppVersion', {id : id}, function(data){
+				if(data.Code == 999) {
+					ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.reload();
+					});
+				} else {
+					ArtDialogHlp.showInfo('提示', data.Msg);
+				}
+			}, 'json');
+		});
+	});
+
+	//编辑
+	$(".edit-btn").click(function(){
+        var app_id = $(this).attr('data-app-id');
+        var app_name = $(this).attr('data-app-name');
+	    var id = $(this).attr('data-id');
+        var version = $(this).attr('data-version');
+        var package = $(this).attr('data-package');
+        var publish_time = $(this).attr('data-publish-time');
+        var update_desc = $(this).attr('data-update-desc');
+        var is_update = $(this).attr('data-is-update');
+
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="version" class="col-sm-3 control-label">版本号</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="version" placeholder="如：1.0.0" value="'+version+'">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="package" class="col-sm-3 control-label">安装包</label>');
+        html.push('<div class="col-sm-9">');
+        var msg = '';
+        if(package != '') {
+            msg = '(已上传)';
+		}
+        html.push('<button type="button" class="btn btn-sm btn-block btn-warning" id="upload-app-btn">点击上传'+msg+'</button>');
+        html.push('<input type="hidden" name="package" id="package" value="'+package+'" />');
+        html.push('<input type="file" style=" width:0; height:0; overflow:hidden;" name="upload_file" id="upload_file"/>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="publish_time" class="col-sm-3 control-label">发布时间</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="publish_time" data-date-format="yyyy-mm-dd" readonly value="'+publish_time+'"></div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="update_desc" class="col-sm-3 control-label">更新内容</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<textarea class="form-control" id="update_desc" rows="5">'+update_desc+'</textarea>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="is_update" class="col-sm-3 control-label"></label>');
+        html.push('<div class="col-sm-9">');
+        var checked = '';
+        if(is_update == 1) {
+            checked = 'checked';
+		}
+        html.push('<div class="checkbox"><label style="padding-left:0px;"><input type="checkbox" id="is_update" value="1" '+checked+'> 强制升级</label></div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+
+        html.push('<div class="box-footer">');
+        html.push('<button type="button" class="btn btn-info pull-right add-commit-btn">保存</button>');
+        html.push('</div>');
+
+        html.push('</form>');
+
+        var dialogObj = {
+            title: app_name + " - 编辑版本信息",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:400,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        //初始化日期控件
+        $('.datepicker').datepicker({
+            autoclose: true
+        });
+
+        //单选框、复选框
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue',
+            increaseArea: '20%'
+        });
+
+        $("#upload-app-btn").click(function(){
+            $('#upload_file').trigger('click')
+        });
+
+        $("#upload_file").change(function(){
+            window.uploadPackage();
+        });
+
+        $(".add-commit-btn").click(function(){
+            var version = $.trim($("#version").val());
+            var package = $("#package").val();
+            var publish_time = $.trim($("#publish_time").val());
+            var update_desc = $.trim($("#update_desc").val());
+            var is_update = 0;
+
+            if($('#is_update').is(':checked')) {
+                is_update = 1;
+            }
+
+            if(version == '') {
+                ArtDialogHlp.showInfo('提示', '请填写版本号');
+                return false;
+            }
+
+            if(package == '') {
+                ArtDialogHlp.showInfo('提示', '请上传安装包');
+                return false;
+            }
+
+            if(publish_time == '') {
+                ArtDialogHlp.showInfo('提示', '请选择发布时间');
+                return false;
+            }
+
+            if(update_desc == '') {
+                ArtDialogHlp.showInfo('提示', '请填写更新内容');
+                return false;
+            }
+
+            $.post('/admin/app/saveAppVersion', {
+                id : id,
+                app_id : app_id,
+                version : version,
+                package : package,
+                publish_time : publish_time,
+                update_desc : update_desc,
+                is_update : is_update
+            }, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+                        window.location.reload();
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+	});
+
+	//发布新版本
+	$(".add-version-btn").click(function(){
+	    var app_id = $(this).attr('data-app-id');
+        var app_name = $(this).attr('data-app-name');
+
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="version" class="col-sm-3 control-label">版本号</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<input type="text" class="form-control" id="version" placeholder="如：1.0.0">');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="package" class="col-sm-3 control-label">安装包</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<button type="button" class="btn btn-sm btn-block btn-warning" id="upload-app-btn">点击上传</button>');
+        html.push('<input type="hidden" name="package" id="package" value="" />');
+        html.push('<input type="file" style=" width:0; height:0; overflow:hidden;" name="upload_file" id="upload_file"/>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="publish_time" class="col-sm-3 control-label">发布时间</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div><input type="text" class="form-control pull-right datepicker" id="publish_time" data-date-format="yyyy-mm-dd" readonly></div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="update_desc" class="col-sm-3 control-label">更新内容</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<textarea class="form-control" id="update_desc" rows="5"></textarea>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="is_update" class="col-sm-3 control-label"></label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<div class="checkbox"><label style="padding-left:0px;"><input type="checkbox" id="is_update" value="1"> 强制升级</label></div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+
+        html.push('<div class="box-footer">');
+        html.push('<button type="button" class="btn btn-info pull-right add-commit-btn">发布</button>');
+        html.push('</div>');
+
+        html.push('</form>');
+
+        var dialogObj = {
+            title: app_name + " - 发布新版本",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:400,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        //初始化日期控件
+        $('.datepicker').datepicker({
+            autoclose: true
+        });
+
+        //单选框、复选框
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue',
+            increaseArea: '20%'
+        });
+
+        $("#upload-app-btn").click(function(){
+            $('#upload_file').trigger('click')
+		});
+
+        $("#upload_file").change(function(){
+            window.uploadPackage();
+        });
+
+        $(".add-commit-btn").click(function(){
+			var version = $.trim($("#version").val());
+            var package = $("#package").val();
+            var publish_time = $.trim($("#publish_time").val());
+            var update_desc = $.trim($("#update_desc").val());
+            var is_update = 0;
+
+            if($('#is_update').is(':checked')) {
+                is_update = 1;
+            }
+
+            if(version == '') {
+                ArtDialogHlp.showInfo('提示', '请填写版本号');
+                return false;
+			}
+
+            if(package == '') {
+                ArtDialogHlp.showInfo('提示', '请上传安装包');
+                return false;
+            }
+
+            if(publish_time == '') {
+                ArtDialogHlp.showInfo('提示', '请选择发布时间');
+                return false;
+            }
+
+            if(update_desc == '') {
+                ArtDialogHlp.showInfo('提示', '请填写更新内容');
+                return false;
+            }
+
+            $.post('/admin/app/saveAppVersion', {
+                app_id : app_id,
+                version : version,
+                package : package,
+                publish_time : publish_time,
+                update_desc : update_desc,
+                is_update : is_update
+			}, function(data){
+				if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', data.Msg, function(){
+                        window.location.reload();
+					});
+				} else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+				}
+			}, 'json');
+        });
+	});
+
+    window.uploadPackage = function() {
+        var file_head = document.getElementById("upload_file"),
+            picture = file_head.value;
+
+        if (!picture.match(/.apk|.ipa/i)) {
+            //验证图片格式
+            ArtDialogHlp.showInfo('提示', '您上传的安装包格式不正确，请重新选择！');
+            return false;
+        }
+
+        $("#upload-app-btn").text("点击上传(上传中...)");
+        $.ajaxFileUpload({
+            url : "/admin/upload/index", //用于文件上传的服务器端请求地址
+            secureuri : false, //是否需要安全协议，一般设置为false
+            fileElementId : 'upload_file', //文件上传域的ID
+            dataType : 'json', //返回值类型 一般设置为json
+            data : {
+                action : 'package',
+                extend : 'app'
+            },
+            success : function(data, status) {
+                if(data.Code == 999) {
+                    var file_url = data.Data.file_url;
+                    var rel_url = data.Data.rel_url;
+
+                    $("#package").val(rel_url);
+                    $("#upload-app-btn").text("点击上传(上传完成)");
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                    $("#upload-app-btn").text("点击上传(上传失败)");
+                }
+                $("#upload_file").change(function(){
+                    window.uploadPackage();
+                });
+            }
+        });
+    };
+});
+</script>

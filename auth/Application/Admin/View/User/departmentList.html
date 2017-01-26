@@ -1,0 +1,151 @@
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>部门列表</h1>
+		<ol class="breadcrumb">
+			<li><a href="/admin"><i class="fa fa-dashboard"></i> 首页</a></li>
+			<li class="active">账号管理</li>
+			<li class="active">部门列表</li>
+		</ol>
+	</section>
+	<section class="content">
+		<div class="box">
+			<div class="box-header with-border">
+				<form class="form-inline" method="get" action="javascript:;">
+					<ul class="list-inline">
+						<li><button class="btn btn-info btn-sm add-btn" type="button">新增部门</button></li>
+					</ul>
+				</form>
+			</div>
+			<div class="box-body">
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th style="width: 40px">ID</th>
+							<th>部门名</th>
+							<th style="width: 50px">操作</th>
+						</tr>
+						<if condition="count($departmentList) eq 0"><tr><td class="text-center" colspan="3">暂无数据...</td></tr></if>
+						<foreach name="departmentList" item="department">
+                        	<tr>
+                        		<td>{$department.id}</td>
+                        		<td>{$department.name}</td>
+                        		<td><button class="btn btn-danger btn-xs update-btn" type="button" data-id="{$department.id}" data-name="{$department.name}">修改</button></td>
+                        	</tr>
+                        </foreach>
+					</tbody>
+				</table>
+			</div>			
+		</div>
+	</section>
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $(".add-btn").click(function(){
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="name" class="col-sm-3 control-label">部门名称：</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<div class="input-group input-group-sm">');
+        html.push('<input type="text" class="form-control" name="name" id="name">');
+        html.push('<span class="input-group-btn"><button type="button" class="btn btn-info btn-flat add-commit-btn">提交</button></span>');
+        html.push('</div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+        html.push('</form>');
+
+        var dialogObj = {
+            title: "新增部门",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:450,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        $(".add-commit-btn").click(function(){
+            var name = $.trim($("#name").val());
+
+            if(name == '') {
+                ArtDialogHlp.showInfo('提示', '请填写部门名称');
+                return false;
+            }
+
+            $.post('/admin/user/saveDepartment', {name:name}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.href = '/admin/user/departmentList';
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+
+    $(".update-btn").click(function(){
+        var id = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        var html = [];
+        html.push('<form class="form-horizontal">');
+        html.push('<div class="box-body">');
+
+        html.push('<div class="form-group">');
+        html.push('<label for="name" class="col-sm-3 control-label">部门名称：</label>');
+        html.push('<div class="col-sm-9">');
+        html.push('<div class="input-group input-group-sm">');
+        html.push('<input type="text" class="form-control" name="name" id="name" value="' + name + '">');
+        html.push('<span class="input-group-btn"><button type="button" class="btn btn-info btn-flat update-commit-btn">提交</button></span>');
+        html.push('</div>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+        html.push('</form>');
+
+        var dialogObj = {
+            title: "修改部门",
+            content: html.join(""),
+            okValue: '关 闭',
+            width:450,
+            fixed:false,
+            zIndex: 9999,
+            onshow:function () {},
+            onreset:function () {},
+            onclose:function() {}
+        };
+        d = dialog(dialogObj);
+        d.showModal();
+
+        $(".update-commit-btn").click(function(){
+            var new_name = $.trim($("#name").val());
+
+            if(new_name == '') {
+                ArtDialogHlp.showInfo('提示', '请填写部门名称');
+                return false;
+            }
+
+            $.post('/admin/user/saveDepartment', {id : id, name:new_name}, function(data){
+                if(data.Code == 999) {
+                    ArtDialogHlp.showInfo('提示', '操作成功', function(){
+                        window.location.href = '/admin/user/departmentList';
+                    });
+                } else {
+                    ArtDialogHlp.showInfo('提示', data.Msg);
+                }
+            }, 'json');
+        });
+    });
+});
+</script>
