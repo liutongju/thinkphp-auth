@@ -337,8 +337,8 @@ class InstallController extends Controller {
 				['id'=>11, 'pid'=>10, 'name'=>'应用列表', 'sort_id'=>110000, 'function_id'=>26, 'icon'=>'', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
 
 				['id'=>12, 'pid'=>0, 'name'=>'日志管理', 'sort_id'=>1000000, 'function_id'=>0, 'icon'=>'fa fa-fw fa-file-code-o', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
-				['id'=>13, 'pid'=>12, 'name'=>'登录日志', 'sort_id'=>1100000, 'function_id'=>30, 'icon'=>'', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
-				['id'=>14, 'pid'=>12, 'name'=>'访问日志', 'sort_id'=>1200000, 'function_id'=>31, 'icon'=>'', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
+				['id'=>13, 'pid'=>12, 'name'=>'登录日志', 'sort_id'=>1100000, 'function_id'=>33, 'icon'=>'', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
+				['id'=>14, 'pid'=>12, 'name'=>'访问日志', 'sort_id'=>1200000, 'function_id'=>34, 'icon'=>'', 'url_extend'=>'', 'app_id'=>C('APP_ID'), 'create_time'=>time()],
 		]);
 
 		$this->insertAuthData(AuthTable::TB_AUTH_USER, [
