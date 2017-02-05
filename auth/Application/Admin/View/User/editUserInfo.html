@@ -24,9 +24,9 @@
 					<div class="box box-primary">
 						<div class="box-body box-profile">
 							<notempty name='userInfo.img'>
-								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="{:load_img($userInfo['img'])}" alt="员工照片" onclick="$('#upload_file').trigger('click')">
+								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="{$userInfo.img_url}" alt="员工照片" onclick="$('#upload_file').trigger('click')">
 							<else/>
-								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="{:load_img('AdminLTE/dist/img/user2-160x160.jpg')}" alt="员工照片" onclick="$('#upload_file').trigger('click')">
+								<img class="profile-user-img img-responsive img-circle file_upload_show" style="width:100px;height:100px;cursor:pointer;" src="<php>echo load_img(C('AUTH_USER_DEFAULT_AVATAR'));</php>" alt="员工照片" onclick="$('#upload_file').trigger('click')">
 							</notempty>
 							<input type="file" style=" width:0; height:0; overflow:hidden;" name="upload_file" id="upload_file"/>
 							<input type="hidden" name="img" id="hidden_img" value="{$userInfo.img}" />

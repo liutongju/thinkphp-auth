@@ -28,13 +28,16 @@ class UserService extends Model {
 			
 			//将技能拆分成数组
 			$userInfo['skill'] && $userInfo['skillList'] = explode(',', $userInfo['skill']);
+
+			//用户头像
+            $userInfo['img_url'] = $userInfo['img'] ? load_img($userInfo['img']) : load_img(C('AUTH_USER_DEFAULT_AVATAR'));
 		}
 		return $userInfo;
 	}
 	
 	/**
 	 * 查询用户姓名
-	 * @param unknown $uid
+	 * @param $uid
 	 */
 	public function getUserNameById($uid) {
 		$userInfo = D('Resource/User')->getUserInfo(['id'=>$uid], 'name');
@@ -138,8 +141,8 @@ class UserService extends Model {
 	
 	/**
 	 * 查询用户关联的用户组Id列表
-	 * @param unknown $user_id
-	 * @param unknown $app_id
+	 * @param $user_id
+	 * @param $app_id
 	 */
 	public function getUserRelationUserGroupIdList($user_id, $app_id) {
 		//查询用户关联的用户组
@@ -157,7 +160,7 @@ class UserService extends Model {
 	
 	/**
 	 * 查询用户组关联的功能id列表
-	 * @param unknown $user_group_id
+	 * @param $user_group_id
 	 */
 	public function getUserGroupRelationFunctionIdList($user_group_id) {
 		$userGroupFunctionList = D('Resource/UserGroupFunction')->getUserGroupRelationFunctionList($user_group_id);
@@ -254,7 +257,7 @@ class UserService extends Model {
 	
 	/**
 	 * 查询用户关联的应用id列表
-	 * @param unknown $user_id
+	 * @param $user_id
 	 */
 	public function getUserRelationAppIdList($user_id) {
 		$userAppList = D('Resource/UserApp')->getUserRelationAppList($user_id);
@@ -271,7 +274,7 @@ class UserService extends Model {
 	
 	/**
 	 * 查询用户关联的应用列表
-	 * @param unknown $user_id
+	 * @param $user_id
 	 */
 	public function getUserRelationAppList($user_id) {
 		$userAppList = D('Resource/UserApp')->getUserRelationAppList($user_id);		
@@ -288,7 +291,7 @@ class UserService extends Model {
 	
 	/**
 	 * 添加用户关联的应用
-	 * @param unknown $params
+	 * @param $params
 	 */
 	public function addUserRelationApp($params) {
 		return D('Resource/UserApp')->addUserRelationApp($params);
