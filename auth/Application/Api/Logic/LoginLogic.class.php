@@ -79,7 +79,7 @@ class LoginLogic extends Model {
 	 * @param string $app_id
 	 */
 	private function getExtData($user_id, $app_id) {
-		if($app_id == 'jqauth') {
+		if($app_id == C('APP_ID')) {
 			//权限系统，获取用户关联的应用
 			$appList = D('Resource/User', 'Service')->getUserRelationAppList($user_id);
 			return ['appList'=>$appList];
