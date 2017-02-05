@@ -419,21 +419,21 @@ class InstallController extends Controller {
 	 */
 	private function getTableList() {
 		$tableList = [];
-		$tableList[AuthTable::TB_APP] = ['name'=>AuthTable::TB_APP, 'sql'=>AuthTable::TB_APP_SQL, 'desc'=>'应用表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-        $tableList[AuthTable::TB_APP_VERSION] = ['name'=>AuthTable::TB_APP_VERSION, 'sql'=>AuthTable::TB_APP_VERSION_SQL, 'desc'=>'应用版本表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_FUNCTION] = ['name'=>AuthTable::TB_AUTH_FUNCTION, 'sql'=>AuthTable::TB_AUTH_FUNCTION_SQL, 'desc'=>'功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-		$tableList[AuthTable::TB_AUTH_FUNCTION_GROUP] = ['name'=>AuthTable::TB_AUTH_FUNCTION_GROUP, 'sql'=>AuthTable::TB_AUTH_FUNCTION_GROUP_SQL, 'desc'=>'功能组表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-		$tableList[AuthTable::TB_AUTH_USER] = ['name'=>AuthTable::TB_AUTH_USER, 'sql'=>AuthTable::TB_AUTH_USER_SQL, 'desc'=>'系统用户表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_USER_GROUP] = ['name'=>AuthTable::TB_AUTH_USER_GROUP, 'sql'=>AuthTable::TB_AUTH_USER_GROUP_SQL, 'desc'=>'用户组表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-		$tableList[AuthTable::TB_AUTH_USER_USERGROUP] = ['name'=>AuthTable::TB_AUTH_USER_USERGROUP, 'sql'=>AuthTable::TB_AUTH_USER_USERGROUP_SQL, 'desc'=>'用户用户组关联表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_USERGROUP_FUNCTION] = ['name'=>AuthTable::TB_AUTH_USERGROUP_FUNCTION, 'sql'=>AuthTable::TB_AUTH_USERGROUP_FUNCTION_SQL, 'desc'=>'用户组功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-		$tableList[AuthTable::TB_AUTH_USER_FUNCTION] = ['name'=>AuthTable::TB_AUTH_USER_FUNCTION, 'sql'=>AuthTable::TB_AUTH_USER_FUNCTION_SQL, 'desc'=>'用户功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_USER_APP] = ['name'=>AuthTable::TB_AUTH_USER_APP, 'sql'=>AuthTable::TB_AUTH_USER_APP_SQL, 'desc'=>'用户应用表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_DEPARTMENT] = ['name'=>AuthTable::TB_AUTH_DEPARTMENT, 'sql'=>AuthTable::TB_AUTH_DEPARTMENT_SQL, 'desc'=>'部门表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_POSITION] = ['name'=>AuthTable::TB_AUTH_POSITION, 'sql'=>AuthTable::TB_AUTH_POSITION_SQL, 'desc'=>'岗位表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_AUTH_MENU] = ['name'=>AuthTable::TB_AUTH_MENU, 'sql'=>AuthTable::TB_AUTH_MENU_SQL, 'desc'=>'菜单表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
-		$tableList[AuthTable::TB_LOG_AUTH_LOGIN] = ['name'=>AuthTable::TB_LOG_AUTH_LOGIN, 'sql'=>AuthTable::TB_LOG_AUTH_LOGIN_SQL, 'desc'=>'登录日志表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
-		$tableList[AuthTable::TB_LOG_AUTH_ACCESS] = ['name'=>AuthTable::TB_LOG_AUTH_ACCESS, 'sql'=>AuthTable::TB_LOG_AUTH_ACCESS_SQL, 'desc'=>'访问日志表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_APP')] = ['name'=>C('TB_APP'), 'sql'=>C('TB_APP_SQL'), 'desc'=>'应用表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+        $tableList[C('TB_APP_VERSION')] = ['name'=>C('TB_APP_VERSION'), 'sql'=>C('TB_APP_VERSION_SQL'), 'desc'=>'应用版本表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_FUNCTION')] = ['name'=>C('TB_AUTH_FUNCTION'), 'sql'=>C('TB_AUTH_FUNCTION_SQL'), 'desc'=>'功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+		$tableList[C('TB_AUTH_FUNCTION_GROUP')] = ['name'=>C('TB_AUTH_FUNCTION_GROUP'), 'sql'=>C('TB_AUTH_FUNCTION_GROUP_SQL'), 'desc'=>'功能组表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+		$tableList[C('TB_AUTH_USER')] = ['name'=>C('TB_AUTH_USER'), 'sql'=>C('TB_AUTH_USER_SQL'), 'desc'=>'系统用户表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_USER_GROUP')] = ['name'=>C('TB_AUTH_USER_GROUP'), 'sql'=>C('TB_AUTH_USER_GROUP_SQL'), 'desc'=>'用户组表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+		$tableList[C('TB_AUTH_USER_USERGROUP')] = ['name'=>C('TB_AUTH_USER_USERGROUP'), 'sql'=>C('TB_AUTH_USER_USERGROUP_SQL'), 'desc'=>'用户用户组关联表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_USERGROUP_FUNCTION')] = ['name'=>C('TB_AUTH_USERGROUP_FUNCTION'), 'sql'=>C('TB_AUTH_USERGROUP_FUNCTION_SQL'), 'desc'=>'用户组功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+		$tableList[C('TB_AUTH_USER_FUNCTION')] = ['name'=>C('TB_AUTH_USER_FUNCTION'), 'sql'=>C('TB_AUTH_USER_FUNCTION_SQL'), 'desc'=>'用户功能表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_USER_APP')] = ['name'=>C('TB_AUTH_USER_APP'), 'sql'=>C('TB_AUTH_USER_APP_SQL'), 'desc'=>'用户应用表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_DEPARTMENT')] = ['name'=>C('TB_AUTH_DEPARTMENT'), 'sql'=>C('TB_AUTH_DEPARTMENT_SQL'), 'desc'=>'部门表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_POSITION')] = ['name'=>C('TB_AUTH_POSITION'), 'sql'=>C('TB_AUTH_POSITION_SQL'), 'desc'=>'岗位表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_AUTH_MENU')] = ['name'=>C('TB_AUTH_MENU'), 'sql'=>C('TB_AUTH_MENU_SQL'), 'desc'=>'菜单表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>1];
+		$tableList[C('TB_LOG_AUTH_LOGIN')] = ['name'=>C('TB_LOG_AUTH_LOGIN'), 'sql'=>C('TB_LOG_AUTH_LOGIN_SQL'), 'desc'=>'登录日志表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
+		$tableList[C('TB_LOG_AUTH_ACCESS')] = ['name'=>C('TB_LOG_AUTH_ACCESS'), 'sql'=>C('TB_LOG_AUTH_ACCESS_SQL'), 'desc'=>'访问日志表', 'status'=>0, 'tb_exists'=>0, 'msg'=>'', 'base_auth'=>0];
 		return $tableList;
 	}
 
