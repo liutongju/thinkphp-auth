@@ -20,16 +20,14 @@
                     				<div id="groupsids_{$functionGroup.id}" class="accordion-group">
                     					<label style="width:250px;" class="position-relative">
                     						<input type="checkbox" name="group_ids[]" value="{$functionGroup.id}">
-                    						<span title="{$functionGroup.name}">
-                    							<b>{$functionGroup.name}</b>
-                    						</span>
+                    						&nbsp;<span title="{$functionGroup.name}"><b>{$functionGroup.name}</b></span>
                     					</label>
                     				</div>
                     				<div id="fun_ids_{$functionGroup.id}" class="accordion-inner" style="padding:9px 15px 9px 30px;">
                     					<foreach name="functionGroup.functionList" item="function">
                     						<label  style="width:250px;" class="position-relative">
                     							<input type="checkbox" name="function_ids[]" value="{$function.id}" <if condition="$function.is_checked eq 1">checked</if>  tag="{$functionGroup.id}">
-                    							<span style="font-weight:normal;<if condition='$function.is_checked eq 1'>color:#FF0000;</if>" title="{$function.path}">{$function.name}</span>
+												&nbsp;<span style="font-weight:normal;<if condition='$function.is_checked eq 1'>color:#FF0000;</if>" title="{$function.path}">{$function.name}</span>
                     						</label>
                     					</foreach>
                     				</div>
@@ -50,30 +48,12 @@
 
 <script type="text/javascript">
 $(function() {
-	$("input:checkbox[name='group_ids[]']").click(function() {
-	    var pgid = this.value;
-	    if (this.checked) {
-	        $("#fun_ids_"+pgid).find("input:checkbox").prop("checked", true);
-	    } else {
-	        $("#fun_ids_"+pgid).find("input:checkbox").prop("checked", false);
-	    }
-	});
-	
-	$("input:checkbox[name='func_ids[]']").click(function() {
-	    var gid_tag = $(this).attr('tag');    
-	    var pgElem = $("#groupsids_"+gid_tag).find("input[name='group_ids[]']")[0];    
-	    if (this.checked && !pgElem.checked) {
-	        //判断是否要勾上全选
-	        if (0 == $(this).parents(".accordion-inner").find("input:checkbox").not("input:checked").length) {
-	            pgElem.checked = true;
-	        }
-	    } else if (!this.checked && pgElem.checked) {
-	        //判断是否要取消全选
-	        if ($(this).parents(".accordion-inner").find("input:checkbox:checked").length) {
-	            pgElem.checked = false;
-	        }
-	    }
-	});
+    //全选
+    $("input:checkbox[name='group_ids[]']").on('ifChecked',function(event) {
+        $("#fun_ids_" + this.value).find("input:checkbox").iCheck('check');
+    }).on('ifUnchecked',function(event) {
+        $("#fun_ids_" + this.value).find("input:checkbox").iCheck('uncheck');
+    });
 
 	$(".save-btn").click(function() {
 		var user_group_id = $("#user_group_id").val();
