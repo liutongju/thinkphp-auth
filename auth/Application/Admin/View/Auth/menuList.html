@@ -151,7 +151,7 @@ $(function(){
 			   return false;
 		   }
 
-		   if(!!!Number.isInteger(func_id)) {
+		   if(isNaN(func_id)) {
 			   ArtDialogHlp.showInfo('提示', '请填写正确的功能ID');
 			   return false;
 		   }
@@ -271,7 +271,7 @@ $(function(){
 				return false;
 			}
 
-			if(!!!Number.isInteger(func_id)) {
+            if(isNaN(func_id)) {
 				ArtDialogHlp.showInfo('提示', '请填写正确的功能ID');
 				return false;
 			}
