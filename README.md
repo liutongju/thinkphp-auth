@@ -9,7 +9,7 @@ auth、demo、static都是独立的项目，配置独立的域名
 + frame : ThinkPHP框架放置的位置
 
 ## 系统界面
-更多界面可在static/auth-ui/ 目录下查看
+更多界面可在[static/auth-ui/](https://github.com/tangzwgo/thinkphp-auth/tree/master/static/auth-ui) 目录下查看
 
 + 登录页
 ![](https://github.com/tangzwgo/thinkphp-auth/blob/master/static/auth-ui/login.png?raw=true)
