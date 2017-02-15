@@ -7,3 +7,9 @@ auth、demo、static都是独立的项目，配置独立的域名
 + demo : 一个对接权限系统的例子
 + static : 静态资源目录
 + frame : ThinkPHP框架放置的位置
+
+## 系统界面
+更多界面可在static/auth-ui/ 目录下查看
+
+### 首页
+![](https://github.com/tangzwgo/thinkphp-auth/blob/master/static/auth-ui/home.png?raw=true)
