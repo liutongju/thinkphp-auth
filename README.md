@@ -85,3 +85,21 @@ auth、demo、static都是独立的项目，配置独立的域名
 + 刷新权限，用户权限是在用户登录后存储在session中的，修改权限后不会更新用户session，所以需要手动刷新才能获取最新的权限
 
 + 在个人主页可修改头像
+
+## 部署
+
++ 将auth和static这两个项目部署到服务器上，比如auth项目对应域名auth.juqun.tangzw.com，static项目对应域名static.juqun.tangzw.com
+
++ 修改auth/Application/Common/Conf/config.php文件（根据自己的实际情况修改）：
+
+--------数据库相关的配置（DB_TYPE、DB_HOST、DB_NAME、DB_USER、DB_PWD、DB_PORT、DB_PREFIX）
+
+--------域名相关的配置（POSTFIX_DOMAIN、AUTH_DOMAIN、STATIC_DOMAIN）
+
+--------静态资源存放的路径（STATIC_PATH）
+
++ 访问http://AUTH_DOMAIN/install页面，进行权限初始化，你也可以自己手动在数据库中添加初始化权限，权限初始化后切记把这个页面删除或者设为禁止访问
+
++ 如果系统中有些地方不满足你的要求，你可以自己去修改代码，改成自己需要的样子，然后部署即可。
+
+（如有任何问题或建议欢迎大家提交Issues或者加我微信<tangzwgo>向我反馈，谢谢^^）
