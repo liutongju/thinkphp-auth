@@ -59,9 +59,9 @@ function api_check() {
 
 /**
  * 返回数据
- * @param type $ResponseCode    响应码
- * @param type $ResponseMsg     响应消息
- * @param type $ResponseData    响应数据
+ * @param $ResponseCode    响应码
+ * @param $ResponseMsg     响应消息
+ * @param $ResponseData    响应数据
  */
 function ReturnMsg($ResponseCode = 999,$ResponseMsg = '调用成功',$ResponseData = array()){
     if(!is_numeric($ResponseCode)) {
@@ -77,10 +77,10 @@ function ReturnMsg($ResponseCode = 999,$ResponseMsg = '调用成功',$ResponseDa
 
 /**
  * 接口数据响应
- * @param type $ResponseCode    响应码
- * @param type $ResponseMsg     响应消息
- * @param type $ResponseData    响应数据
- * @param type $ResponseType    响应数据类型
+ * @param $ResponseCode    响应码
+ * @param $ResponseMsg     响应消息
+ * @param $ResponseData    响应数据
+ * @param $ResponseType    响应数据类型
  */
 function Response($ResponseCode = 999,$ResponseMsg = '接口请求成功',$ResponseData = array(),$ResponseType = 'json'){
     if(!is_numeric($ResponseCode)) {
@@ -112,9 +112,9 @@ function Response($ResponseCode = 999,$ResponseMsg = '接口请求成功',$Respo
 
 /**
  * 响应Json格式数据
- * @param type $ResponseCode    响应码
- * @param type $ResponseMsg     响应消息
- * @param type $ResponseData    响应数据
+ * @param $ResponseCode    响应码
+ * @param $ResponseMsg     响应消息
+ * @param $ResponseData    响应数据
  */
 function json($ResponseCode = 999,$ResponseMsg = '接口请求成功',$ResponseData = array()){
     if(!is_numeric($ResponseCode)) {
@@ -134,9 +134,9 @@ function json($ResponseCode = 999,$ResponseMsg = '接口请求成功',$ResponseD
 
 /**
  * 响应xml格式数据
- * @param type $ResponseCode    响应码
- * @param type $ResponseMsg     响应消息
- * @param type $ResponseData    响应数据
+ * @param $ResponseCode    响应码
+ * @param $ResponseMsg     响应消息
+ * @param $ResponseData    响应数据
  */
 function xmlencode($ResponseCode = 999,$ResponseMsg = '接口请求成功',$ResponseData = array()) {
     if (!is_numeric($ResponseCode)) {
@@ -162,8 +162,8 @@ function xmlencode($ResponseCode = 999,$ResponseMsg = '接口请求成功',$Resp
 
 /**
  * 将数据编码成xml格式
- * @param type $data
- * @return type
+ * @param $data
+ * @return
  */
 function xml_to_encode($data) {
     $xml = $attr = "";
