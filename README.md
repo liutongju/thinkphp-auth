@@ -92,11 +92,11 @@ auth、demo、static都是独立的项目，配置独立的域名
 
 + 修改auth/Application/Common/Conf/config.php文件（根据自己的实际情况修改）：
 
---------数据库相关的配置（DB_TYPE、DB_HOST、DB_NAME、DB_USER、DB_PWD、DB_PORT、DB_PREFIX）
+1. 数据库相关的配置（DB_TYPE、DB_HOST、DB_NAME、DB_USER、DB_PWD、DB_PORT、DB_PREFIX）
 
---------域名相关的配置（POSTFIX_DOMAIN、AUTH_DOMAIN、STATIC_DOMAIN）
+2. 域名相关的配置（POSTFIX_DOMAIN、AUTH_DOMAIN、STATIC_DOMAIN）
 
---------静态资源存放的路径（STATIC_PATH）
+3. 静态资源存放的路径（STATIC_PATH）
 
 + 访问http://AUTH_DOMAIN/install页面，进行权限初始化，你也可以自己手动在数据库中添加初始化权限，权限初始化后切记把这个页面删除或者设为禁止访问
 
